@@ -1,20 +1,15 @@
 // ======== Configuration ========
-
-// Three distinct wordsets, each 12 one-syllable, unrelated pairs.
 const WORDSETS = [
-  // Wordset 1
   [
     ["cat", "ring"], ["sun", "jam"], ["bed", "rope"], ["fish", "bell"],
     ["tree", "mask"], ["star", "shoe"], ["book", "coal"], ["rain", "gold"],
     ["glass", "farm"], ["road", "leaf"], ["bread", "wave"], ["clock", "sand"],
   ],
-  // Wordset 2
   [
     ["ship", "barn"], ["salt", "glove"], ["stone", "card"], ["wind", "seat"],
     ["lamp", "knot"], ["foot", "surf"], ["milk", "twig"], ["ring", "cup"],
     ["seed", "mine"], ["bell", "sky"], ["leaf", "hook"], ["mask", "page"],
   ],
-  // Wordset 3
   [
     ["coal", "bed"], ["gate", "fish"], ["wave", "bread"], ["sand", "star"],
     ["chair", "rain"], ["hand", "glass"], ["card", "sun"], ["wheel", "book"],
@@ -22,55 +17,37 @@ const WORDSETS = [
   ],
 ];
 
-// Study display time per pair (ms)
 const STUDY_MS = 3000;
+const ANSWER_TIME_LIMIT = 5000; // 5 seconds
 
 // ======== State ========
 let weekNumber = null;
 let wordsetIndex = 0;
 let pairs = [];
-let phase = "setup";
 let currentRound = 0;
 let studyIdx = 0;
 let studyTimer = null;
-let answersByRound = { 1: [], 2: [], 3: [] };
 let scoresByRound = { 1: 0, 2: 0, 3: 0 };
+let currentOrder = [];
+let currentCueIndex = 0;
+let currentCorrect = 0;
+let answerTimer = null;
 
 // ======== Elements ========
-let phaseLabelEl;
-let progressBarEl;
-
-let setupSection;
-let studySection;
-let roundSection;
-let summarySection;
-
-let weekInput;
-let startBtn;
-let skipStudyBtn;
-
-let pairLeftEl;
-let pairRightEl;
-
-let roundTitleEl;
-let roundListEl;
-let submitRoundBtn;
-
-let scoreR1El;
-let scoreR2El;
-let scoreR3El;
-let restartBtn;
+let phaseLabelEl, progressBarEl;
+let setupSection, studySection, roundSection, summarySection;
+let weekInput, startBtn, skipBtn;
+let pairLeftEl, pairRightEl;
+let roundTitleEl, roundListEl, submitRoundBtn;
+let scoreR1El, scoreR2El, scoreR3El, restartBtn;
 
 // ======== Utils ========
 function setPhase(name) {
-  phase = name;
-  if (phaseLabelEl) {
-    phaseLabelEl.textContent =
-      name === "setup" ? "Setup" :
-      name === "study" ? "Study" :
-      name === "round" ? `Round ${currentRound}` :
-      name === "summary" ? "Summary" : "";
-  }
+  phaseLabelEl.textContent =
+    name === "setup" ? "Setup" :
+    name === "study" ? "Study" :
+    name === "round" ? `Round ${currentRound}` :
+    name === "summary" ? "Summary" : "";
 
   setupSection.classList.toggle("active", name === "setup");
   studySection.classList.toggle("active", name === "study");
@@ -129,76 +106,78 @@ function nextStudyPair() {
   renderStudyPair();
 }
 
-// ======== Rounds ========
+// ======== Rounds (one cue at a time) ========
 function startRound(n) {
   currentRound = n;
+  currentCorrect = 0;
   setPhase("round");
   roundTitleEl.textContent = `Round ${n}`;
 
-  const order = shuffle(pairs.map((p, i) => i));
+  currentOrder = shuffle(pairs.map((_, i) => i));
+  currentCueIndex = 0;
+  showNextCue();
+}
+
+function showNextCue() {
   roundListEl.innerHTML = "";
-  answersByRound[n] = new Array(pairs.length).fill("");
 
-  order.forEach((idx) => {
-    const cueSide = Math.random() < 0.5 ? 0 : 1;
-    const cue = pairs[idx][cueSide];
-    const target = pairs[idx][1 - cueSide];
-
-    const item = document.createElement("div");
-    item.className = "round-item";
-
-    const cueEl = document.createElement("div");
-    cueEl.className = "cue";
-    cueEl.textContent = cue;
-
-    const inputEl = document.createElement("input");
-    inputEl.type = "text";
-    inputEl.placeholder = "Type the matching word";
-    inputEl.autocomplete = "off";
-    inputEl.dataset.pairIndex = String(idx);
-    inputEl.dataset.target = target;
-
-    item.appendChild(cueEl);
-    item.appendChild(inputEl);
-    roundListEl.appendChild(item);
-
-    inputEl.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        const inputs = [...roundListEl.querySelectorAll("input")];
-        const next = inputs[inputs.indexOf(inputEl) + 1];
-        if (next) next.focus();
-      }
-    });
-  });
-
-  const firstInput = roundListEl.querySelector("input");
-  if (firstInput) firstInput.focus();
-
-  clampProgress(0);
-}
-
-function scoreRound() {
-  const inputs = [...roundListEl.querySelectorAll("input")];
-  let correct = 0;
-
-  inputs.forEach((inp) => {
-    const idx = Number(inp.dataset.pairIndex);
-    const target = normalize(inp.dataset.target);
-    const val = normalize(inp.value);
-    answersByRound[currentRound][idx] = val;
-    if (val === target) correct++;
-    inp.style.borderColor = val === target ? "var(--success)" : "var(--danger)";
-  });
-
-  scoresByRound[currentRound] = correct;
-}
-
-function continueFlowAfterRound() {
-  if (currentRound < 3) {
-    startStudyAgainThenRound(currentRound + 1);
-  } else {
-    showSummary();
+  if (currentCueIndex >= currentOrder.length) {
+    scoresByRound[currentRound] = currentCorrect;
+    if (currentRound < 3) {
+      startStudyAgainThenRound(currentRound + 1);
+    } else {
+      showSummary();
+    }
+    return;
   }
+
+  const idx = currentOrder[currentCueIndex];
+  const cueSide = Math.random() < 0.5 ? 0 : 1;
+  const cue = pairs[idx][cueSide];
+  const target = pairs[idx][1 - cueSide];
+
+  const item = document.createElement("div");
+  item.className = "round-item";
+
+  const cueEl = document.createElement("div");
+  cueEl.className = "cue";
+  cueEl.textContent = cue;
+
+  const inputEl = document.createElement("input");
+  inputEl.type = "text";
+  inputEl.placeholder = "Type the matching word";
+  inputEl.autocomplete = "off";
+
+  item.appendChild(cueEl);
+  item.appendChild(inputEl);
+  roundListEl.appendChild(item);
+
+  inputEl.focus();
+
+  // Start 5-second timer
+  if (answerTimer) clearTimeout(answerTimer);
+  answerTimer = setTimeout(() => {
+    currentCueIndex++;
+    showNextCue();
+  }, ANSWER_TIME_LIMIT);
+
+  // Submit button
+  submitRoundBtn.onclick = () => {
+    clearTimeout(answerTimer);
+    const val = normalize(inputEl.value);
+    if (val === normalize(target)) {
+      currentCorrect++;
+    }
+    currentCueIndex++;
+    showNextCue();
+  };
+
+  // Skip button
+  skipBtn.onclick = () => {
+    clearTimeout(answerTimer);
+    currentCueIndex++;
+    showNextCue();
+  };
 }
 
 function startStudyAgainThenRound(nextRoundNum) {
@@ -221,15 +200,14 @@ function startStudyAgainThenRound(nextRoundNum) {
 
 function showSummary() {
   setPhase("summary");
-  scoreR1El.textContent = `${scoresByRound[1]}/12`;
-  scoreR2El.textContent = `${scoresByRound[2]}/12`;
-  scoreR3El.textContent = `${scoresByRound[3]}/12`;
+  scoreR1El.textContent = `${scoresByRound[1]}/12 (Week ${weekNumber})`;
+  scoreR2El.textContent = `${scoresByRound[2]}/12 (Week ${weekNumber})`;
+  scoreR3El.textContent = `${scoresByRound[3]}/12 (Week ${weekNumber})`;
   clampProgress(100);
 }
 
 // ======== Boot & Event Listeners ========
 document.addEventListener("DOMContentLoaded", () => {
-  // Bind elements after DOM is ready
   phaseLabelEl = document.getElementById("phase-label");
   progressBarEl = document.getElementById("progress-bar");
 
@@ -240,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   weekInput = document.getElementById("week-input");
   startBtn = document.getElementById("start-btn");
-  skipStudyBtn = document.getElementById("skip-study-btn");
+  skipBtn = document.getElementById("skip-study-btn"); // repurposed as Skip in rounds
 
   pairLeftEl = document.getElementById("pair-left");
   pairRightEl = document.getElementById("pair-right");
@@ -254,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
   scoreR3El = document.getElementById("score-r3");
   restartBtn = document.getElementById("restart-btn");
 
-  // Attach listeners
   startBtn.addEventListener("click", () => {
     const val = Number(weekInput.value);
     if (!val || val < 1) {
@@ -269,29 +246,5 @@ document.addEventListener("DOMContentLoaded", () => {
     startStudy();
   });
 
-  skipStudyBtn.addEventListener("click", () => {
-    nextStudyPair();
-  });
-
-  submitRoundBtn.addEventListener("click", () => {
-    scoreRound();
-    const pct = (currentRound / 3) * 100;
-    clampProgress(pct);
-    continueFlowAfterRound();
-  });
-
   restartBtn.addEventListener("click", () => {
     weekNumber = null;
-    wordsetIndex = 0;
-    pairs = [];
-    phase = "setup";
-    currentRound = 0;
-    studyIdx = 0;
-    if (studyTimer) clearInterval(studyTimer);
-    answersByRound = { 1: [], 2: [], 3: [] };
-    scoresByRound = { 1: 0, 2: 0, 3: 0 };
-    weekInput.value = "";
-    clampProgress(0);
-    setPhase("setup");
-  });
-});
