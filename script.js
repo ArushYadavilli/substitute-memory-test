@@ -278,3 +278,23 @@ startBtn.addEventListener("click", () => {
 skipStudyBtn.addEventListener("click", () => {
   nextStudy();
 });
+submitRoundBtn.addEventListener("click", () => {
+  scoreRound();
+  const pct = (currentRound / 3) * 100;
+  clampProgress(pct);
+  continueFlowAfterRound();
+});
+
+restartBtn.addEventListener("click", () => {
+  weekNumber = null;
+  wordsetIndex = 0;
+  pairs = [];
+  phase = "setup";
+  currentRound = 0;
+  studyIdx = 0;
+  if (studyTimer) clearInterval(studyTimer);
+  answersByRound = { 1: [], 2: [], 3: [] };
+  scoresByRound = { 1: 0, 2: 0, 3: 0 };
+  weekInput.value = "";
+  clampProgress(0);
+  setPhase("setup");
