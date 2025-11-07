@@ -276,4 +276,5 @@ startBtn.addEventListener("click", () => {
 });
 
 skipStudyBtn.addEventListener("click", () => {
-  nextStudy
+  nextStudy();
+});
