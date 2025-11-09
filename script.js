@@ -132,6 +132,29 @@ function shuffle(arr) {
   return a;
 }
 
+// Sends Data to the form
+function submitResults({weekNumber, r1, r2, r3}){
+  const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdAfI1-AVjHhCga1_Lv-geS1Ih_0tOL5wQ_F2vv8dma8GGVLQ/formResponse"
+  const formData = new FormData();
+
+  data.append("entry.312291640", weekNumber);
+  data.append("entry.1830333204", r1);
+  data.append("entry.1863797794", r2);
+  data.append("entry.625268846", r3);
+
+  fetch(formUrl, {
+    method: "POST",
+    body: data
+  })
+  .then(() => {
+    console.log("Results Submitted to Google Forms");
+  })
+  .catch(err => {
+    console.error("Submission failed:", err);
+  });
+}
+    
+  
 // Cleans up user input for comparison (lowercase + trimmed)
 function normalize(s) {
   return (s || "").trim().toLowerCase();
@@ -280,6 +303,12 @@ function showSummary() {
   scoreR2El.textContent = `${roundTwoScore}/12 (Week ${weekNumber})`;
   scoreR3El.textContent = `${roundThreeScore}/12 (Week ${weekNumber})`;
   clampProgress(100);
+  submitResults({
+    weekNumber,
+    r1: roundOneScore,
+    r2: roundTwoScore,
+    r3: roundThreeScore
+  });
 }
 
 // ======== Bootstrapping / Event Listeners ========
