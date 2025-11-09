@@ -145,6 +145,8 @@ function submitResults({weekNumber, r1, r2, r3}){
   fetch(formUrl, {
     method: "POST",
     body: data
+    mode: "no-cors"
+  
   })
   .then(() => {
     console.log("Results Submitted to Google Forms");
