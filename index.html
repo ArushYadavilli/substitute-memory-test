@@ -23,16 +23,24 @@
     <main class="card">
       <section id="setup-section" class="section active">
         <h1 class="title">Welcome</h1>
-        <p class="subtitle">Enter your study week number to begin. Your wordset will be selected automatically.</p>
-
+        <p class="subtitle">Enter your study week number and participant ID to begin. Your wordset will be selected automatically.</p>
+      
+        <!-- Participant ID input -->
+        <div class="form-row">
+          <label for="participant-id">Participant ID</label>
+          <input type="text" id="participant-id" placeholder="e.g., P123" required />
+        </div>
+      
+        <!-- Week number input -->
         <div class="form-row">
           <label for="week-input">Study week number</label>
-          <input type="number" id="week-input" min="1" placeholder="e.g., 1, 2, 3, ..." />
+          <input type="number" id="week-input" min="1" placeholder="e.g., 1, 2, 3, ..." required />
         </div>
-
+      
         <button class="btn primary" id="start-btn">Start</button>
         <p class="hint">You will see 12 word pairs for 3 seconds each, then complete 3 recall rounds.</p>
       </section>
+
 
       <section id="study-section" class="section">
         <h2 class="title">Study the pairs</h2>
