@@ -24,7 +24,7 @@ const WORDSETS = [
 const STUDY_MS = 3000;
 
 // Max time allowed to answer each cue during recall (milliseconds)
-const ANSWER_TIME_LIMIT = 5000;
+const ANSWER_TIME_LIMIT = 8000;
 
 // ======== State ========
 
@@ -52,8 +52,8 @@ let currentCueIndex = 0;
 // How many correct answers the user has given in the current round
 let currentCorrect = 0;
 
-// Time reference for the 5-second answer window during test phase
-let answerTimer = null;
+// Time reference for the 5-second  window during test phase
+let Timer = null;
 
 //Score variables for each round
 let roundOneScore = 0;
