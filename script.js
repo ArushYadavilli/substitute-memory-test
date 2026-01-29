@@ -147,30 +147,7 @@ function shuffle(arr) {
   return a;
 }
 
-// Sends Data to the form
-function submitResults({participantId, weekNumber, r1, r2, r3}){
-  const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdAfI1-AVjHhCga1_Lv-geS1Ih_0tOL5wQ_F2vv8dma8GGVLQ/formResponse"
-  const data = new FormData();
 
-  data.append("entry.1852794725", participantId);
-  data.append("entry.312291640", weekNumber);
-  data.append("entry.1830333204", r1);
-  data.append("entry.1863797794", r2);
-  data.append("entry.625268846", r3);
-
-  fetch(formUrl, {
-    method: "POST",
-    body: data,
-    mode: "no-cors"
-  
-  })
-  .then(() => {
-    console.log("Results Submitted to Google Forms");
-  })
-  .catch(err => {
-    console.error("Submission failed:", err);
-  });
-}
     
   
 // Cleans up user input for comparison (lowercase + trimmed)
@@ -392,20 +369,6 @@ function showSummary() {
   scoreStroopIncongEl.textContent = stroopIncongruentScore;
 
   const participantId = document.getElementById("participant-id").value.trim();
-  
-  submitResults({
-    participantId: participantIdInput.value.trim(),
-    weekNumber,
-    r1: roundOneScore,
-    r2: roundTwoScore,
-    r3: roundThreeScore
-  });
-  const participantId = participantIdInput.value.trim();
-  const week = parseInt(weekInput.value, 10);
-  const lockKey = `completed_${participantId}_week_${week}`;
-  localStorage.setItem(lockKey, "true");
-
-}
 
 // ======== Bootstrapping / Event Listeners ========
 
