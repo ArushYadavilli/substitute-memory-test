@@ -41,6 +41,15 @@
         <p class="hint">You will see 12 word pairs for 3 seconds each, then complete 3 recall rounds.</p>
       </section>
 
+      <section id="test-select-section" class="section">
+        <h1 class="title">Choose a Test</h1>
+        <p class="subtitle">Complete all tests for this week.</p>
+
+        <div class="test-buttons">
+          <button class="btn primary" id="btn-memory">Memory Test</button>
+          <button class="btn primary" id="btn-stroop">Stroop Task</button>
+        </div>
+      </section>
 
       <section id="study-section" class="section">
         <h2 class="title">Study the pairs</h2>
@@ -65,6 +74,18 @@
         </div>
       </section>
 
+
+      <section id="stroop-section" class="section">
+        <h2 class="title">Stroop Task</h2>
+        <p class="subtitle">Press the key that matches the INK COLOR.</p>
+
+        <div id="stroop-word" class="stroop-word">WORD</div>
+
+        <p class="hint">Keys: R = Red, B = Blue, G = Green, Y = Yellow</p>
+        <p class="hint" id="stroop-timer">Time left: 45s</p>
+        <p class="hint" id="stroop-score-display">Correct: 0</p>
+      </section>
+
       <section id="summary-section" class="section">
         <h2 class="title">Summary</h2>
         <div class="score-grid">
@@ -81,9 +102,19 @@
             <div class="score-value" id="score-r3">0/12</div>
           </div>
         </div>
+        <div class="score-card">
+          <div class="score-label">Stroop Congruent</div>
+          <div class="score-value" id="score-stroop-cong">0</div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-label">Stroop Incongruent</div>
+          <div class="score-value" id="score-stroop-incong">0</div>
+        </div>
 
         <div class="controls">
         </div>
+        
       </section>
     </main>
 
