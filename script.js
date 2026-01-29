@@ -2,6 +2,21 @@
 
 // Wordsets: each is an array of 12 [leftWord, rightWord] pairs.
 // Keep pairs simple and consistent (lowercase, single words) for clean matching.
+
+let testsRemaining = {
+  memory: true,
+  stroop: true
+};
+
+let stroopCongruentScore = 0;
+let stroopIncongruentScore = 0;
+
+const STROOP_COLORS = ["red", "blue", "green", "yellow"];
+let currentStroopCorrectColor = "";
+let currentStroopType = "";
+let stroopTimerId = null;
+let stroopTimeLeft = 45;
+
 const WORDSETS = [
   [
     ["cat", "ring"], ["sun", "jam"], ["bed", "rope"], ["fish", "bell"],
@@ -163,6 +178,18 @@ function normalize(s) {
   return (s || "").trim().toLowerCase();
 }
 
+function showTestSelection() {
+  hideAllSections();
+  testSelectSection.classList.add("active");
+
+  btnMemory.style.display = testsRemaining.memory ? "block" : "none";
+  btnStroop.style.display = testsRemaining.stroop ? "block" : "none";
+
+  if (!testsRemaining.memory && !testsRemaining.stroop) {
+    showSummary();
+  }
+}
+
 // ======== Study Phase ========
 
 // Begins the study phase: shuffle pairs, show them one by one
@@ -297,6 +324,61 @@ function startStudyAgainThenRound(nextRoundNum) {
   }, STUDY_MS);
 }
 
+// ======== Stroop Phase ========
+function startStroop(type) {
+  currentStroopType = type;
+  stroopTimeLeft = 45;
+  currentStroopCorrectColor = "";
+
+  stroopWordEl.textContent = "READY";
+  stroopWordEl.style.color = "black";
+  stroopScoreDisplayEl.textContent =
+    "Correct: " + (type === "congruent" ? stroopCongruentScore : stroopIncongruentScore);
+  stroopTimerEl.textContent = "Time left: 45s";
+
+  hideAllSections();
+  stroopSection.classList.add("active");
+
+  if (stroopTimerId) clearInterval(stroopTimerId);
+  stroopTimerId = setInterval(() => {
+    stroopTimeLeft--;
+    stroopTimerEl.textContent = "Time left: " + stroopTimeLeft + "s";
+
+    if (stroopTimeLeft <= 0) {
+      clearInterval(stroopTimerId);
+      stroopTimerId = null;
+      handleStroopEnd();
+    }
+  }, 1000);
+
+  runStroopTrial();
+}
+
+function runStroopTrial() {
+  const word = STROOP_COLORS[Math.floor(Math.random() * STROOP_COLORS.length)];
+  let inkColor;
+
+  if (currentStroopType === "congruent") {
+    inkColor = word;
+  } else {
+    const others = STROOP_COLORS.filter(c => c !== word);
+    inkColor = others[Math.floor(Math.random() * others.length)];
+  }
+
+  stroopWordEl.textContent = word.toUpperCase();
+  stroopWordEl.style.color = inkColor;
+  currentStroopCorrectColor = inkColor;
+}
+
+function handleStroopEnd() {
+  if (currentStroopType === "congruent") {
+    startStroop("incongruent");
+  } else {
+    testsRemaining.stroop = false;
+    showTestSelection();
+  }
+}
+
 // ======== Summary Phase ========
 
 // Displays the scores after all three rounds
@@ -306,6 +388,8 @@ function showSummary() {
   scoreR2El.textContent = `${roundTwoScore}/12 (Week ${weekNumber})`;
   scoreR3El.textContent = `${roundThreeScore}/12 (Week ${weekNumber})`;
   clampProgress(100);
+  scoreStroopCongEl.textContent = stroopCongruentScore;
+  scoreStroopIncongEl.textContent = stroopIncongruentScore;
 
   const participantId = document.getElementById("participant-id").value.trim();
   
@@ -316,6 +400,11 @@ function showSummary() {
     r2: roundTwoScore,
     r3: roundThreeScore
   });
+  const participantId = participantIdInput.value.trim();
+  const week = parseInt(weekInput.value, 10);
+  const lockKey = `completed_${participantId}_week_${week}`;
+  localStorage.setItem(lockKey, "true");
+
 }
 
 // ======== Bootstrapping / Event Listeners ========
@@ -344,6 +433,17 @@ document.addEventListener("DOMContentLoaded", () => {
   scoreR1El = document.getElementById("score-r1");
   scoreR2El = document.getElementById("score-r2");
   scoreR3El = document.getElementById("score-r3");
+  testSelectSection = document.getElementById("test-select-section");
+  btnMemory = document.getElementById("btn-memory");
+  btnStroop = document.getElementById("btn-stroop");
+  
+  stroopSection = document.getElementById("stroop-section");
+  stroopWordEl = document.getElementById("stroop-word");
+  stroopTimerEl = document.getElementById("stroop-timer");
+  stroopScoreDisplayEl = document.getElementById("stroop-score-display");
+  
+  scoreStroopCongEl = document.getElementById("score-stroop-cong");
+  scoreStroopIncongEl = document.getElementById("score-stroop-incong");
 
   
     // Start button listener
@@ -358,6 +458,15 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Please enter a valid week number (>=1).");
       return;
     }
+    const participantId = participantIdInput.value.trim();
+    const week = parseInt(weekInput.value, 10);
+
+    const lockKey = `completed_${participantId}_week_${week}`;
+    if (localStorage.getItem(lockKey)) {
+      alert("You have already completed this week's tests.");
+      return;
+    }
+
     weekNumber = val;
     wordsetIndex = selectWordset(weekNumber);
 
@@ -365,7 +474,35 @@ document.addEventListener("DOMContentLoaded", () => {
     pairs = WORDSETS[wordsetIndex].map(([L, R]) => [L, R]);
 
     // Begin study phase
-    startStudy();
+    showTestSelection();
   });
 
+  document.addEventListener("keydown", (e) => {
+    if (!stroopSection.classList.contains("active")) return;
+    if (!currentStroopCorrectColor) return;
+  
+    const key = e.key.toLowerCase();
+    let chosen = "";
+  
+    if (key === "r") chosen = "red";
+    if (key === "b") chosen = "blue";
+    if (key === "g") chosen = "green";
+    if (key === "y") chosen = "yellow";
+  
+    if (!chosen) return;
+  
+    if (chosen === currentStroopCorrectColor) {
+      if (currentStroopType === "congruent") stroopCongruentScore++;
+      else stroopIncongruentScore++;
+  
+      stroopScoreDisplayEl.textContent =
+        "Correct: " +
+        (currentStroopType === "congruent"
+          ? stroopCongruentScore
+          : stroopIncongruentScore);
+    }
+    runStroopTrial();
+  });
+
+  btnStroop.addEventListener("click", () => startStroop("congruent"));
 });
