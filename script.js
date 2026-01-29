@@ -411,34 +411,33 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Start button listener
   startBtn.addEventListener("click", () => {
-    const participantId = participantIdInput.value.trim();
-    const val = parseInt(weekInput.value, 10);
-    if(!participantId){
-      alert("Please enter your Participant ID given to you when you signed up");
-      return;
-    }
-    if (!val || val < 1) {
-      alert("Please enter a valid week number (>=1).");
-      return;
-    }
-    const participantId = participantIdInput.value.trim();
-    const week = parseInt(weekInput.value, 10);
-
-    const lockKey = `completed_${participantId}_week_${week}`;
-    if (localStorage.getItem(lockKey)) {
-      alert("You have already completed this week's tests.");
-      return;
-    }
-
-    weekNumber = val;
-    wordsetIndex = selectWordset(weekNumber);
-
-    // Build pairs from the chosen wordset
-    pairs = WORDSETS[wordsetIndex].map(([L, R]) => [L, R]);
-
-    // Begin study phase
-    showTestSelection();
+      const participantId = participantIdInput.value.trim();
+      const val = parseInt(weekInput.value, 10);
+  
+      if(!participantId){
+        alert("Please enter your Participant ID given to you when you signed up");
+        return;
+      }
+      if (!val || val < 1) {
+        alert("Please enter a valid week number (>=1).");
+        return;
+      }
+  
+      const week = parseInt(weekInput.value, 10);
+      const lockKey = `completed_${participantId}_week_${week}`;
+      if (localStorage.getItem(lockKey)) {
+        alert("You have already completed this week's tests.");
+        return;
+      }
+  
+      weekNumber = val;
+      wordsetIndex = selectWordset(weekNumber);
+  
+      pairs = WORDSETS[wordsetIndex].map(([L, R]) => [L, R]);
+  
+      showTestSelection();
   });
+
 
   document.addEventListener("keydown", (e) => {
     if (!stroopSection.classList.contains("active")) return;
