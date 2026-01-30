@@ -278,6 +278,7 @@ function hideAllSections() {
   summarySection.classList.remove("active");
   testSelectSection.classList.remove("active");
   stroopSection.classList.remove("active");
+  digitSpanSection.classList.remove("active"); // FIX
 }
 
 
