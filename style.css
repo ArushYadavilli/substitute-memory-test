@@ -240,3 +240,56 @@ input:focus {
   margin: 40px 0;
   text-align: center;
 }
+
+/* Digit Span Sequencing theme-aware styles */
+#digitspan-section.card {
+  text-align: center;
+  padding: 20px;
+}
+
+#digitspan-display {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--text);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid var(--border);
+  padding: 22px;
+  margin: 18px auto;
+  width: min(520px, 92%);
+  border-radius: 12px;
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+/* subtle flash used when showing digits */
+#digitspan-display.flash {
+  transform: scale(1.04);
+  box-shadow: 0 10px 30px rgba(99,102,241,0.08);
+}
+
+/* timer / hint */
+#digitspan-timer {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* input and buttons reuse existing styles but tighten spacing */
+#digitspan-input {
+  width: min(520px, 92%);
+  padding: 12px 14px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(11,19,36,0.6);
+  color: var(--text);
+}
+
+/* small responsive tweak */
+@media (max-width: 520px) {
+  #digitspan-display { font-size: 40px; min-height: 88px; padding: 16px; }
+  #digitspan-input { font-size: 16px; }
+}
