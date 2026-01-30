@@ -169,11 +169,6 @@ async function displaySequence(seq) {
   digitDisplayEl.textContent = "NOW";
 }
 
-digitSubmitBtn.addEventListener("click", submitDigitSpan);
-digitInputEl && digitInputEl.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") submitDigitSpan();
-});
-
 function submitDigitSpan() {
   if (dssShowing) return;
   const raw = digitInputEl.value.replace(/\s+/g, "");
@@ -599,4 +594,8 @@ document.addEventListener("DOMContentLoaded", () => {
   btnMemory.addEventListener("click", startStudy);
   btnStroop.addEventListener("click", () => startStroop("congruent"));
   btnDigitSpan.addEventListener("click", startDigitSpan);
+  digitSubmitBtn.addEventListener("click", submitDigitSpan);
+  digitInputEl && digitInputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") submitDigitSpan();
+  });
 });
