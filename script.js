@@ -244,7 +244,8 @@ function showNextCue() {
     if (currentRound < 3) {
       startStudyAgainThenRound(currentRound + 1);
     } else {
-      showSummary();
+      testsRemaining.memory = false; // optional here, but safe 
+      showTestSelection();
     }
     return;
   }
@@ -372,6 +373,7 @@ function handleStroopEnd() {
 
 // Displays the scores after all three rounds
 function showSummary() {
+  testsRemaining.memory = false;
   setPhase("summary");
   scoreR1El.textContent = `${roundOneScore}/12 (Week ${weekNumber})`;
   scoreR2El.textContent = `${roundTwoScore}/12 (Week ${weekNumber})`;
