@@ -159,15 +159,23 @@ function generateSequence(len) {
 }
 
 async function displaySequence(seq) {
+  // PATCH: disable submit during display
+  digitSubmitBtn.disabled = true;
+
   digitDisplayEl.textContent = "";
-  for (let i=0;i<seq.length;i++) {
+  for (let i = 0; i < seq.length; i++) {
     digitDisplayEl.textContent = seq[i];
     await new Promise(r => setTimeout(r, DSS_DISPLAY_MS));
     digitDisplayEl.textContent = "";
     await new Promise(r => setTimeout(r, DSS_GAP_MS));
   }
+
   digitDisplayEl.textContent = "NOW";
+
+  // PATCH: re-enable submit after display
+  digitSubmitBtn.disabled = false;
 }
+
 
 function submitDigitSpan() {
   if (dssShowing) return;
