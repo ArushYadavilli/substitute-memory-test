@@ -477,6 +477,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     runStroopTrial();
   });
-
+  btnMemory.addEventListener("click", startStudy);
   btnStroop.addEventListener("click", () => startStroop("congruent"));
 });
