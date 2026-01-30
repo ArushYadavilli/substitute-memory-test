@@ -124,6 +124,10 @@ function setPhase(name) {
   studySection.classList.toggle("active", name === "study");
   roundSection.classList.toggle("active", name === "round");
   summarySection.classList.toggle("active", name === "summary");
+  
+  testSelectSection.classList.remove("active");
+  stroopSection.classList.remove("active");
+
 }
 
 // Keeps the progress bar value safely between 0 and 100
