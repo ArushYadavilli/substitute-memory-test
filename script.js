@@ -140,17 +140,24 @@ function startDigitSpan() {
 function showDigitSpanTrial() {
   hideAllSections();
   digitSpanSection.classList.add("active");
+
   digitInputEl.value = "";
   digitInputEl.disabled = true;
+  digitSubmitBtn.disabled = true;   // PATCH
+
   digitScoreEl.textContent = `Best: ${dssBest}`;
   dssSequence = generateSequence(dssCurrentLen);
+
   dssShowing = true;
+
   displaySequence(dssSequence).then(() => {
     dssShowing = false;
     digitInputEl.disabled = false;
+    digitSubmitBtn.disabled = false;  // PATCH
     digitInputEl.focus();
   });
 }
+
 
 function generateSequence(len) {
   const seq = [];
