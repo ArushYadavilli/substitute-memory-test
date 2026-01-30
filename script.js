@@ -5,8 +5,10 @@
 
 let testsRemaining = {
   memory: true,
-  stroop: true
+  stroop: true,
+  digitspan: true
 };
+
 // Digit Span Sequencing globals
 let digitSpanSection, btnDigitSpan, digitDisplayEl, digitInputEl, digitSubmitBtn, digitTimerEl, digitScoreEl;
 const DSS_START_LEN = 3;
@@ -285,11 +287,13 @@ function showTestSelection() {
 
   btnMemory.style.display = testsRemaining.memory ? "block" : "none";
   btnStroop.style.display = testsRemaining.stroop ? "block" : "none";
+  btnDigitSpan.style.display = testsRemaining.digitspan ? "block" : "none";
 
-  if (!testsRemaining.memory && !testsRemaining.stroop) {
+  if (!testsRemaining.memory && !testsRemaining.stroop && !testsRemaining.digitspan) {
     showSummary();
   }
 }
+
 
 // ======== Study Phase ========
 
