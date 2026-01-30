@@ -369,7 +369,7 @@ function showSummary() {
   scoreStroopIncongEl.textContent = stroopIncongruentScore;
 
   const participantId = document.getElementById("participant-id").value.trim();
-
+}
 // ======== Bootstrapping / Event Listeners ========
 
 document.addEventListener("DOMContentLoaded", () => {
