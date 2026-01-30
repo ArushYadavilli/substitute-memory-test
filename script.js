@@ -147,13 +147,21 @@ function shuffle(arr) {
   return a;
 }
 
-
-    
   
 // Cleans up user input for comparison (lowercase + trimmed)
 function normalize(s) {
   return (s || "").trim().toLowerCase();
 }
+
+function hideAllSections() {
+  setupSection.classList.remove("active");
+  studySection.classList.remove("active");
+  roundSection.classList.remove("active");
+  summarySection.classList.remove("active");
+  testSelectSection.classList.remove("active");
+  stroopSection.classList.remove("active");
+}
+
 
 function showTestSelection() {
   hideAllSections();
