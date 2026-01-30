@@ -7,6 +7,20 @@ let testsRemaining = {
   memory: true,
   stroop: true
 };
+// Digit Span Sequencing globals
+let digitSpanSection, btnDigitSpan, digitDisplayEl, digitInputEl, digitSubmitBtn, digitTimerEl, digitScoreEl;
+const DSS_START_LEN = 3;
+const DSS_MAX_LEN = 9;
+const DSS_TRIALS_PER_LEN = 2;
+const DSS_DISPLAY_MS = 1000; // ms per digit
+const DSS_GAP_MS = 300; // gap between digits
+let dssCurrentLen = DSS_START_LEN;
+let dssTrialCount = 0;
+let dssFailuresAtLen = 0;
+let dssBest = 0;
+let dssSequence = [];
+let dssShowing = false;
+
 
 let stroopCongruentScore = 0;
 let stroopIncongruentScore = 0;
@@ -113,6 +127,94 @@ let scoreR3El;
 
 // ======== Utility Functions ========
 // Switches the app to a given phase and updates the UI
+
+function startDigitSpan() {
+  testsRemaining.digitspan = true;
+  dssCurrentLen = DSS_START_LEN;
+  dssTrialCount = 0;
+  dssFailuresAtLen = 0;
+  dssBest = 0;
+  showDigitSpanTrial();
+}
+
+function showDigitSpanTrial() {
+  hideAllSections();
+  digitSpanSection.classList.add("active");
+  digitInputEl.value = "";
+  digitInputEl.disabled = true;
+  digitScoreEl.textContent = `Best: ${dssBest}`;
+  dssSequence = generateSequence(dssCurrentLen);
+  dssShowing = true;
+  displaySequence(dssSequence).then(() => {
+    dssShowing = false;
+    digitInputEl.disabled = false;
+    digitInputEl.focus();
+  });
+}
+
+function generateSequence(len) {
+  const seq = [];
+  for (let i=0;i<len;i++) seq.push(Math.floor(Math.random()*9)+1);
+  return seq;
+}
+
+async function displaySequence(seq) {
+  digitDisplayEl.textContent = "";
+  for (let i=0;i<seq.length;i++) {
+    digitDisplayEl.textContent = seq[i];
+    await new Promise(r => setTimeout(r, DSS_DISPLAY_MS));
+    digitDisplayEl.textContent = "";
+    await new Promise(r => setTimeout(r, DSS_GAP_MS));
+  }
+  digitDisplayEl.textContent = "NOW";
+}
+
+digitSubmitBtn.addEventListener("click", submitDigitSpan);
+digitInputEl && digitInputEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") submitDigitSpan();
+});
+
+function submitDigitSpan() {
+  if (dssShowing) return;
+  const raw = digitInputEl.value.replace(/\s+/g, "");
+  if (!raw) return;
+  const user = raw.split("").map(Number).filter(n=>!isNaN(n));
+  const correct = [...dssSequence].sort((a,b)=>a-b);
+  if (arraysEqual(user, correct)) {
+    dssBest = Math.max(dssBest, dssCurrentLen);
+    dssTrialCount++;
+    dssFailuresAtLen = 0;
+    if (dssTrialCount >= DSS_TRIALS_PER_LEN) {
+      dssCurrentLen++;
+      dssTrialCount = 0;
+    }
+  } else {
+    dssFailuresAtLen++;
+    dssTrialCount++;
+    if (dssTrialCount >= DSS_TRIALS_PER_LEN) {
+      dssTrialCount = 0;
+      if (dssFailuresAtLen >= 2) {
+        endDigitSpan();
+        return;
+      } else {
+        dssCurrentLen = Math.max(DSS_START_LEN, dssCurrentLen); // keep same length
+      }
+    }
+  }
+  if (dssCurrentLen > DSS_MAX_LEN) { endDigitSpan(); return; }
+  showDigitSpanTrial();
+}
+
+function endDigitSpan() {
+  testsRemaining.digitspan = false;
+  // store score for summary
+  scoreDigitSpanEl.textContent = dssBest;
+  showTestSelection();
+}
+
+// small helper
+function arraysEqual(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
+
 function setPhase(name) {
   phaseLabelEl.textContent =
     name === "setup" ? "Setup" :
@@ -407,6 +509,17 @@ document.addEventListener("DOMContentLoaded", () => {
   roundListEl = document.getElementById("round-list");
   submitRoundBtn = document.getElementById("submit-round-btn");
 
+  digitSpanSection = document.getElementById("digitspan-section");
+  btnDigitSpan = document.getElementById("btn-digitspan");
+  digitDisplayEl = document.getElementById("digitspan-display");
+  digitInputEl = document.getElementById("digitspan-input");
+  digitSubmitBtn = document.getElementById("digitspan-submit");
+  digitTimerEl = document.getElementById("digitspan-timer");
+  digitScoreEl = document.getElementById("digitspan-score");
+  scoreDigitSpanEl = document.getElementById("score-digitspan"); // add to summary HTML
+
+
+  
   scoreR1El = document.getElementById("score-r1");
   scoreR2El = document.getElementById("score-r2");
   scoreR3El = document.getElementById("score-r3");
@@ -485,4 +598,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   btnMemory.addEventListener("click", startStudy);
   btnStroop.addEventListener("click", () => startStroop("congruent"));
+  btnDigitSpan.addEventListener("click", startDigitSpan);
 });
