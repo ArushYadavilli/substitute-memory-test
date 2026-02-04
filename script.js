@@ -298,6 +298,7 @@ function showTestSelection() {
   btnMemory.style.display = testsRemaining.memory ? "block" : "none";
   btnStroop.style.display = testsRemaining.stroop ? "block" : "none";
   btnDigitSpan.style.display = testsRemaining.digitspan ? "block" : "none";
+  btnRT.style.display = testsRemaining.rt ? "block" : "none";
 
   if (!testsRemaining.memory && !testsRemaining.stroop && !testsRemaining.digitspan && !testsRemaining.rt) {
     showSummary();
