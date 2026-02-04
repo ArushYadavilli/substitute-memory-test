@@ -288,6 +288,8 @@ function hideAllSections() {
   digitSpanSection.classList.remove("active"); // FIX
   rtSection.classList.remove("active"); // ← add this 
   document.getElementById("stroop-pause").style.display = "none"; // ← and this
+  document.getElementById("test-complete").style.display = "none";
+
 }
 
 
