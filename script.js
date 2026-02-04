@@ -479,7 +479,9 @@ function runStroopTrial() {
 
 function handleStroopEnd() {
   if (currentStroopType === "congruent") {
-    startStroop("incongruent");
+    // show pause screen
+    hideAllSections();
+    document.getElementById("stroop-pause").style.display = "flex";
   } else {
     testsRemaining.stroop = false;
     showTestSelection();
