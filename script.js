@@ -514,16 +514,14 @@ function nextRTTrial() {
 }
 
 function showRTBall() {
-  const rect = rtArea.getBoundingClientRect();
-  const x = Math.random() * (rect.width - 80);
-  const y = Math.random() * (rect.height - 80);
-
-  rtBall.style.left = x + "px";
-  rtBall.style.top = y + "px";
+  rtBall.style.left = "50%";
+  rtBall.style.top = "50%";
+  rtBall.style.transform = "translate(-50%, -50%)";
   rtBall.style.display = "block";
 
   rtStartTime = performance.now();
 }
+
 
 function finishRT() {
   let text = "Reaction Times (ms):<br>";
@@ -678,16 +676,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   btnRT.addEventListener("click", startRT);
   rtStartBtn.addEventListener("click", startRT);
-  rtBall.addEventListener("click", () => {
-    const rt = performance.now() - rtStartTime;
-    rtResults.push(rt);
-    rtBall.style.display = "none";
+  document.addEventListener("keydown", (e) => {
+    if (rtBall.style.display === "block" && e.code === "Space") {
+      const rt = performance.now() - rtStartTime;
+      rtResults.push(rt);
+      rtBall.style.display = "none";
   
-    rtTrial++;
-    if (rtTrial < RT_TRIALS) {
-      nextRTTrial();
-    } else {
-      finishRT();
+      rtTrial++;
+      if (rtTrial < RT_TRIALS) {
+        nextRTTrial();
+      } else {
+        finishRT();
+      }
     }
-  });
+});
+
 });
