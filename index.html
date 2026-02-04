@@ -49,6 +49,7 @@
           <button class="btn primary" id="btn-memory">Memory Test</button>
           <button class="btn primary" id="btn-stroop">Stroop Task</button>
           <button class="btn primary" id="btn-digitspan">Digit Span Sequencing</button>
+          <button class="btn primary" id="btn-rt">Reaction Time Test</button>
         </div>
       </section>
 
@@ -103,6 +104,18 @@
         <input id="digitspan-input" type="text" placeholder="Type digits in ascending order" autocomplete="off"/>
         <button id="digitspan-submit" class="btn primary">Submit</button>
         <div id="digitspan-score">Score: 0</div>
+      </section>
+
+      <section id="rt-section" class="section card">
+        <h2>Reaction Time Test</h2>
+        <p>Click the ball as fast as you can when it appears.</p>
+      
+        <div id="rt-area">
+          <div id="rt-ball"></div>
+        </div>
+      
+        <button id="rt-start" class="btn primary">Start</button>
+        <div id="rt-results"></div>
       </section>
 
       <section id="summary-section" class="section">
