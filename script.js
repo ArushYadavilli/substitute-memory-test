@@ -525,19 +525,6 @@ function showRTBall() {
   rtStartTime = performance.now();
 }
 
-rtBall.addEventListener("click", () => {
-  const rt = performance.now() - rtStartTime;
-  rtResults.push(rt);
-  rtBall.style.display = "none";
-
-  rtTrial++;
-  if (rtTrial < RT_TRIALS) {
-    nextRTTrial();
-  } else {
-    finishRT();
-  }
-});
-
 function finishRT() {
   let text = "Reaction Times (ms):<br>";
   rtResults.forEach((t, i) => {
@@ -612,7 +599,12 @@ document.addEventListener("DOMContentLoaded", () => {
   scoreStroopCongEl = document.getElementById("score-stroop-cong");
   scoreStroopIncongEl = document.getElementById("score-stroop-incong");
 
-  
+  rtSection = document.getElementById("rt-section");
+  rtBall = document.getElementById("rt-ball");
+  rtArea = document.getElementById("rt-area");
+  rtStartBtn = document.getElementById("rt-start");
+  rtResultsEl = document.getElementById("rt-results");
+  btnRT = document.getElementById("btn-rt");
     // Start button listener
   startBtn.addEventListener("click", () => {
     const participantId = participantIdInput.value.trim();
@@ -684,14 +676,18 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("stroop-pause").style.display = "none";
   startStroop("incongruent");
   });
-  rtSection = document.getElementById("rt-section");
-  rtBall = document.getElementById("rt-ball");
-  rtArea = document.getElementById("rt-area");
-  rtStartBtn = document.getElementById("rt-start");
-  rtResultsEl = document.getElementById("rt-results");
-  btnRT = document.getElementById("btn-rt");
-  
   btnRT.addEventListener("click", startRT);
   rtStartBtn.addEventListener("click", startRT);
-
+  rtBall.addEventListener("click", () => {
+    const rt = performance.now() - rtStartTime;
+    rtResults.push(rt);
+    rtBall.style.display = "none";
+  
+    rtTrial++;
+    if (rtTrial < RT_TRIALS) {
+      nextRTTrial();
+    } else {
+      finishRT();
+    }
+  });
 });
