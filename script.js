@@ -2,7 +2,7 @@
 
 // Wordsets: each is an array of 12 [leftWord, rightWord] pairs.
 // Keep pairs simple and consistent (lowercase, single words) for clean matching.
-
+let rtBest = 0; // or average, depending on what you want
 let testsRemaining = {
   memory: true,
   stroop: true,
@@ -524,14 +524,26 @@ function showRTBall() {
 
 
 function finishRT() {
-  let text = "Reaction Times (ms):<br>";
-  rtResults.forEach((t, i) => {
-    text += `Trial ${i + 1}: ${t.toFixed(2)} ms<br>`;
-  });
-  rtResultsEl.innerHTML = text;
+  // compute average RT
+  let sum = rtResults.reduce((a, b) => a + b, 0);
+  rtBest = Math.round(sum / rtResults.length);
+
+  // show result in RT section
+  rtResultsEl.innerHTML = `Average RT: ${rtBest} ms`;
+
+  // mark test complete
   testsRemaining.rt = false;
+
+  // update summary page score
+  const rtSummaryEl = document.getElementById("score-rt");
+  if (rtSummaryEl) {
+    rtSummaryEl.textContent = rtBest + " ms";
+  }
+
+  // return to hub
   showTestSelection();
 }
+
 
 // ======== Summary Phase ========
 
@@ -545,8 +557,9 @@ function showSummary() {
   clampProgress(100);
   scoreStroopCongEl.textContent = stroopCongruentScore;
   scoreStroopIncongEl.textContent = stroopIncongruentScore;
-
   const participantId = document.getElementById("participant-id").value.trim();
+  document.getElementById("score-rt").textContent = rtBest + " ms";
+
 }
 // ======== Bootstrapping / Event Listeners ========
 
