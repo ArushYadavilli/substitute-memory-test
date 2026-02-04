@@ -497,10 +497,6 @@ function handleStroopEnd() {
   }
 }
 
-let rtStartTime = 0;
-let rtResults = [];
-let rtTrial = 0;
-const RT_TRIALS = 5;
 
 function startRT() {
   hideAllSections();
