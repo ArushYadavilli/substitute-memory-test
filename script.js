@@ -51,6 +51,13 @@ const WORDSETS = [
   ],
 ];
 
+// Reaction Time globals
+let rtSection, rtArea, rtBall, rtStartBtn, rtResultsEl, btnRT;
+let rtStartTime = 0;
+let rtResults = [];
+let rtTrial = 0;
+const RT_TRIALS = 5;
+
 // Study display duration per pair (milliseconds)
 const STUDY_MS = 3000;
 
