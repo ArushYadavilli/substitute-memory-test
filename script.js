@@ -6,8 +6,10 @@
 let testsRemaining = {
   memory: true,
   stroop: true,
-  digitspan: true
+  digitspan: true,
+  rt: true
 };
+
 
 // Digit Span Sequencing globals
 let digitSpanSection, btnDigitSpan, digitDisplayEl, digitInputEl, digitSubmitBtn, digitTimerEl, digitScoreEl;
@@ -22,8 +24,6 @@ let dssFailuresAtLen = 0;
 let dssBest = 0;
 let dssSequence = [];
 let dssShowing = false;
-
-
 let stroopCongruentScore = 0;
 let stroopIncongruentScore = 0;
 
@@ -279,6 +279,8 @@ function hideAllSections() {
   testSelectSection.classList.remove("active");
   stroopSection.classList.remove("active");
   digitSpanSection.classList.remove("active"); // FIX
+  rtSection.classList.remove("active"); // ← add this 
+  document.getElementById("stroop-pause").style.display = "none"; // ← and this
 }
 
 
@@ -290,9 +292,9 @@ function showTestSelection() {
   btnStroop.style.display = testsRemaining.stroop ? "block" : "none";
   btnDigitSpan.style.display = testsRemaining.digitspan ? "block" : "none";
 
-  if (!testsRemaining.memory && !testsRemaining.stroop && !testsRemaining.digitspan) {
+  if (!testsRemaining.memory && !testsRemaining.stroop && !testsRemaining.digitspan && !testsRemaining.rt) {
     showSummary();
-  }
+  } 
 }
 
 
@@ -488,6 +490,61 @@ function handleStroopEnd() {
   }
 }
 
+let rtStartTime = 0;
+let rtResults = [];
+let rtTrial = 0;
+const RT_TRIALS = 5;
+
+function startRT() {
+  hideAllSections();
+  rtSection.classList.add("active");
+  rtResults = [];
+  rtTrial = 0;
+  rtResultsEl.textContent = "";
+  nextRTTrial();
+}
+
+function nextRTTrial() {
+  rtBall.style.display = "none";
+  const delay = 1000 + Math.random() * 2000;
+  setTimeout(showRTBall, delay);
+}
+
+function showRTBall() {
+  const rect = rtArea.getBoundingClientRect();
+  const x = Math.random() * (rect.width - 80);
+  const y = Math.random() * (rect.height - 80);
+
+  rtBall.style.left = x + "px";
+  rtBall.style.top = y + "px";
+  rtBall.style.display = "block";
+
+  rtStartTime = performance.now();
+}
+
+rtBall.addEventListener("click", () => {
+  const rt = performance.now() - rtStartTime;
+  rtResults.push(rt);
+  rtBall.style.display = "none";
+
+  rtTrial++;
+  if (rtTrial < RT_TRIALS) {
+    nextRTTrial();
+  } else {
+    finishRT();
+  }
+});
+
+function finishRT() {
+  let text = "Reaction Times (ms):<br>";
+  rtResults.forEach((t, i) => {
+    text += `Trial ${i + 1}: ${t.toFixed(2)} ms<br>`;
+  });
+  rtResultsEl.innerHTML = text;
+  testsRemaining.rt = false;
+  showTestSelection();
+}
+
 // ======== Summary Phase ========
 
 // Displays the scores after all three rounds
@@ -624,5 +681,14 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("stroop-pause").style.display = "none";
   startStroop("incongruent");
   });
+  rtSection = document.getElementById("rt-section");
+  rtBall = document.getElementById("rt-ball");
+  rtArea = document.getElementById("rt-area");
+  rtStartBtn = document.getElementById("rt-start");
+  rtResultsEl = document.getElementById("rt-results");
+  btnRT = document.getElementById("btn-rt");
+  
+  btnRT.addEventListener("click", startRT);
+  rtStartBtn.addEventListener("click", startRT);
 
 });
