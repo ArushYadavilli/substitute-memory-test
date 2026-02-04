@@ -225,10 +225,9 @@ function submitDigitSpan() {
 }
 
 function endDigitSpan() {
-  testsRemaining.digitspan = false;
-  // store score for summary
-  scoreDigitSpanEl.textContent = dssBest;
-  showTestSelection();
+    testsRemaining.digitspan = false;
+    hideAllSections();
+    document.getElementById("test-complete").style.display = "flex";
 }
 
 // small helper
@@ -490,15 +489,16 @@ function runStroopTrial() {
 }
 
 function handleStroopEnd() {
-  if (currentStroopType === "congruent") {
-    // show pause screen
-    hideAllSections();
-    document.getElementById("stroop-pause").style.display = "flex";
-  } else {
-    testsRemaining.stroop = false;
-    showTestSelection();
-  }
+    if (currentStroopType === "congruent") {
+        hideAllSections();
+        document.getElementById("stroop-pause").style.display = "flex";
+    } else {
+        testsRemaining.stroop = false;
+        hideAllSections();
+        document.getElementById("test-complete").style.display = "flex";
+    }
 }
+
 
 
 function startRT() {
@@ -543,8 +543,8 @@ function finishRT() {
     rtSummaryEl.textContent = rtBest + " ms";
   }
 
-  // return to hub
-  showTestSelection();
+  hideAllSections();
+  document.getElementById("test-complete").style.display = "flex";
 }
 
 
@@ -570,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cache references to DOM elements
   phaseLabelEl = document.getElementById("phase-label");
   progressBarEl = document.getElementById("progress-bar");
-
+  
   setupSection = document.getElementById("setup-section");
   studySection = document.getElementById("study-section");
   roundSection = document.getElementById("round-section");
@@ -619,6 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
   rtStartBtn = document.getElementById("rt-start");
   rtResultsEl = document.getElementById("rt-results");
   btnRT = document.getElementById("btn-rt");
+  
     // Start button listener
   startBtn.addEventListener("click", () => {
     const participantId = participantIdInput.value.trim();
@@ -705,6 +706,10 @@ document.addEventListener("DOMContentLoaded", () => {
         finishRT();
       }
     }
+  });
+  document.getElementById("complete-continue").addEventListener("click", () => {
+  document.getElementById("test-complete").style.display = "none";
+  showTestSelection();
 });
 
 });
