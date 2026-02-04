@@ -329,3 +329,21 @@ input:focus {
   display: none;
   cursor: pointer;
 }
+
+#test-complete {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--card-bg, #f5f5f5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.complete-overlay {
+  text-align: center;
+  color: #222;
+}
