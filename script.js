@@ -615,7 +615,6 @@ document.addEventListener("DOMContentLoaded", () => {
   rtSection = document.getElementById("rt-section");
   rtBall = document.getElementById("rt-ball");
   rtArea = document.getElementById("rt-area");
-  rtStartBtn = document.getElementById("rt-start");
   rtResultsEl = document.getElementById("rt-results");
   btnRT = document.getElementById("btn-rt");
   
@@ -691,7 +690,6 @@ document.addEventListener("DOMContentLoaded", () => {
   startStroop("incongruent");
   });
   btnRT.addEventListener("click", startRT);
-  rtStartBtn.addEventListener("click", startRT);
   document.addEventListener("keydown", (e) => {
     if (rtBall.style.display === "block" && e.code === "Space") {
       const rt = performance.now() - rtStartTime;
