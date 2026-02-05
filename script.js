@@ -373,7 +373,8 @@ function showNextCue() {
       startStudyAgainThenRound(currentRound + 1);
     } else {
       testsRemaining.memory = false; // optional here, but safe 
-      showTestSelection();
+      hideAllSections(); 
+      document.getElementById("test-complete").style.display = "flex";
     }
     return;
   }
@@ -498,8 +499,6 @@ function handleStroopEnd() {
         document.getElementById("test-complete").style.display = "flex";
     }
 }
-
-
 
 function startRT() {
   hideAllSections();
@@ -708,8 +707,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   document.getElementById("complete-continue").addEventListener("click", () => {
-  document.getElementById("test-complete").style.display = "none";
-  showTestSelection();
-});
+    document.getElementById("test-complete").style.display = "none";
+    showTestSelection();
+  });
 
 });
