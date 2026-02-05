@@ -2,6 +2,8 @@
 
 // Wordsets: each is an array of 12 [leftWord, rightWord] pairs.
 // Keep pairs simple and consistent (lowercase, single words) for clean matching.
+let digitAnswerTimer = null;
+let finalResults = {};
 let rtBest = 0; // or average, depending on what you want
 let testsRemaining = {
   memory: true,
@@ -56,7 +58,7 @@ let rtSection, rtArea, rtBall, rtStartBtn, rtResultsEl, btnRT;
 let rtStartTime = 0;
 let rtResults = [];
 let rtTrial = 0;
-const RT_TRIALS = 5;
+const RT_TRIALS = 20;
 
 // Study display duration per pair (milliseconds)
 const STUDY_MS = 3000;
@@ -165,6 +167,12 @@ function showDigitSpanTrial() {
     digitSubmitBtn.disabled = false;  // PATCH
     digitInputEl.focus();
   });
+  // Start 5-second response timer
+  if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
+  digitAnswerTimer = setTimeout(() => {
+      submitDigitSpan(); // auto-submit with whatever is typed (even empty)
+  }, 5000);
+
 }
 
 
@@ -194,6 +202,7 @@ async function displaySequence(seq) {
 
 
 function submitDigitSpan() {
+  if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
   if (dssShowing) return;
   const raw = digitInputEl.value.replace(/\s+/g, "");
   if (!raw) return;
@@ -357,6 +366,28 @@ function startRound(n) {
   showNextCue();
 }
 
+function submitToGoogleForms() {
+    const formBaseURL = "https://docs.google.com/forms/d/e/1FAIpQLSfDYc6N1uShHFxDf99ClzNrMYOqKR5ok9p-jc1RWUCtegspuA/formResponse";
+
+    const params = new URLSearchParams({
+        "entry.1943144111": finalResults.participantId,
+        "entry.1562095914": finalResults.weekNumber,
+        "entry.1177523297": finalResults.memory.round1,
+        "entry.840747436": finalResults.memory.round2,
+        "entry.163873612": finalResults.memory.round3,
+        "entry.1663343387": finalResults.stroop.congruent,
+        "entry.530157698": finalResults.stroop.incongruent,
+        "entry.269493374": finalResults.digitSpanSequencing,
+        "entry.1406516205": finalResults.reactionTime
+    });
+
+    fetch(formBaseURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: params
+    });
+}
+
 // Shows the next cue in the current round
 function showNextCue() {
   roundListEl.innerHTML = "";
@@ -511,7 +542,7 @@ function startRT() {
 
 function nextRTTrial() {
   rtBall.style.display = "none";
-  const delay = 1000 + Math.random() * 2000;
+  const delay = 3000 + Math.random() * 500;
   setTimeout(showRTBall, delay);
 }
 
@@ -561,7 +592,22 @@ function showSummary() {
   scoreStroopIncongEl.textContent = stroopIncongruentScore;
   const participantId = document.getElementById("participant-id").value.trim();
   document.getElementById("score-rt").textContent = rtBest + " ms";
-
+  finalResults = { 
+    participantId: participantId, 
+    weekNumber: weekNumber, 
+    memory: { 
+      round1: roundOneScore, 
+      round2: roundTwoScore, 
+      round3: roundThreeScore 
+    }, 
+    stroop: { 
+      congruent: stroopCongruentScore, 
+      incongruent: stroopIncongruentScore 
+    }, 
+    digitSpanSequencing: dssBest, 
+    reactionTime: rtBest
+  };
+  submitToGoogleForms();
 }
 // ======== Bootstrapping / Event Listeners ========
 
