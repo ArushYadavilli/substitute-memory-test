@@ -669,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const participantId = participantIdInput.value.trim();
     const val = parseInt(weekInput.value, 10);
 
-    if (!/^\d+$.test(participantId)) {
+    if (!/^\d+$/.test(participantId)) {
       alert("Participant ID must be numbers only");
       return;
     }
