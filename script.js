@@ -669,8 +669,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const participantId = participantIdInput.value.trim();
     const val = parseInt(weekInput.value, 10);
 
-    if (!participantId) {
-      alert("Please enter your Participant ID given to you when you signed up");
+    if (!/^\d+$.test(participantId)) {
+      alert("Participant ID must be numbers only");
       return;
     }
     if (!val || val < 1) {
