@@ -673,7 +673,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Participant ID must be numbers only");
       return;
     }
-    if (!val || val < 1) {
+    if ( (!val || val < 1) || (val > 3) ) {
       alert("Please enter a valid week number (>=1).");
       return;
     }
