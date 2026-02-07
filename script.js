@@ -136,6 +136,7 @@ let scoreR1El;
 let scoreR2El;
 let scoreR3El;
 
+let studyTitleEl;
 // ======== Utility Functions ========
 // Switches the app to a given phase and updates the UI
 
@@ -326,6 +327,8 @@ function startStudy() {
   clampProgress(0);
   renderStudyPair();
   studyTimer = setInterval(nextStudyPair, STUDY_MS);
+  studyTitleEl.textContent = "Study the pairs — Round 1 of 3";
+
 }
 
 // Shows the current pair during study and updates progress
@@ -356,7 +359,7 @@ function startRound(n) {
   currentRound = n;
   currentCorrect = 0;
   setPhase("round");
-  roundTitleEl.textContent = `Round ${n}`;
+  roundTitleEl.textContent = `Round ${n} of 3`;
 
   // Shuffle the order of cues for this round
   currentOrder = shuffle(pairs.map((_, i) => i));
@@ -455,6 +458,7 @@ function showNextCue() {
 
 // Repeats the study phase before moving into the next round
 function startStudyAgainThenRound(nextRoundNum) {
+  studyTitleEl.textContent = `Study the pairs — Round ${nextRoundNum} of 3`;
   setPhase("study");
   studyIdx = 0;
   pairs = shuffle(pairs); // randomize order again
@@ -613,6 +617,7 @@ function showSummary() {
 
 document.addEventListener("DOMContentLoaded", () => {
   // Cache references to DOM elements
+  studyTitleEl = document.getElementByID("study-title");
   phaseLabelEl = document.getElementById("phase-label");
   progressBarEl = document.getElementById("progress-bar");
   
