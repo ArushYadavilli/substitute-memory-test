@@ -674,7 +674,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     if ( (!val || val < 1) || (val > 3) ) {
-      alert("Please enter a valid week number (>=1).");
+      alert("Please enter a valid week number (1-3).");
       return;
     }
 
