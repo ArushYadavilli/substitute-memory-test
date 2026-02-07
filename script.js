@@ -244,11 +244,6 @@ function endDigitSpan() {
 function arraysEqual(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
 
 function setPhase(name) {
-  phaseLabelEl.textContent =
-    name === "setup" ? "Setup" :
-    name === "study" ? "Study" :
-    name === "round" ? `Round ${currentRound}` :
-    name === "summary" ? "Summary" : "";
 
   setupSection.classList.toggle("active", name === "setup");
   studySection.classList.toggle("active", name === "study");
@@ -618,7 +613,6 @@ function showSummary() {
 document.addEventListener("DOMContentLoaded", () => {
   // Cache references to DOM elements
   studyTitleEl = document.getElementById("study-title");
-  phaseLabelEl = document.getElementById("phase-label");
   progressBarEl = document.getElementById("progress-bar");
   
   setupSection = document.getElementById("setup-section");
