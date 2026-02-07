@@ -617,7 +617,7 @@ function showSummary() {
 
 document.addEventListener("DOMContentLoaded", () => {
   // Cache references to DOM elements
-  studyTitleEl = document.getElementByID("study-title");
+  studyTitleEl = document.getElementById("study-title");
   phaseLabelEl = document.getElementById("phase-label");
   progressBarEl = document.getElementById("progress-bar");
   
