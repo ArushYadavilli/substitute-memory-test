@@ -347,3 +347,7 @@ input:focus {
   text-align: center;
   color: #222;
 }
+
+.progress-wrap {
+  display: none !important;
+}
