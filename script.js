@@ -2,7 +2,6 @@
 
 // Wordsets: each is an array of 12 [leftWord, rightWord] pairs.
 // Keep pairs simple and consistent (lowercase, single words) for clean matching.
-let rtTrialLocked = false;
 let rtCurrentDelay = 0;
 let rtHideTimer = null;
 
@@ -555,7 +554,6 @@ function nextRTTrial() {
 
 
 function showRTBall() {
-    rtTrialLocked = false;
     rtBall.style.left = "50%";
     rtBall.style.top = "50%";
     rtBall.style.transform = "translate(-50%, -50%)";
@@ -767,11 +765,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   btnRT.addEventListener("click", startRT);
   document.addEventListener("keydown", (e) => {
-    if (e.code === "Space" &&
-        rtBall.style.display === "block" &&
-        !rtTrialLocked) {
-
-        rtTrialLocked = true; // prevents holding / repeats
+    // Ignore auto-repeat events (holding space)
+    if (e.code === "Space" && !e.repeat && rtBall.style.display === "block") {
 
         const rt = performance.now() - rtStartTime;
         rtResults.push(rt);
@@ -779,10 +774,14 @@ document.addEventListener("DOMContentLoaded", () => {
         rtBall.style.display = "none";
         rtTrial++;
 
-        if (rtTrial < RT_TRIALS) nextRTTrial();
-        else finishRT();
+        if (rtTrial < RT_TRIALS) {
+            nextRTTrial();
+        } else {
+            finishRT();
+        }
     }
-  });
+});
+
 
 
   document.getElementById("complete-continue").addEventListener("click", () => {
