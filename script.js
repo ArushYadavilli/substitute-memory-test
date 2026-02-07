@@ -2,6 +2,9 @@
 
 // Wordsets: each is an array of 12 [leftWord, rightWord] pairs.
 // Keep pairs simple and consistent (lowercase, single words) for clean matching.
+let rtCurrentDelay = 0;
+let rtHideTimer = null;
+
 let digitAnswerTimer = null;
 let finalResults = {};
 let rtBest = 0; // or average, depending on what you want
@@ -540,19 +543,45 @@ function startRT() {
 }
 
 function nextRTTrial() {
-  rtBall.style.display = "none";
-  const delay = 3000 + Math.random() * 500;
-  setTimeout(showRTBall, delay);
+    rtBall.style.display = "none";
+
+    // Random delay before the ball appears
+    const preDelay = 3000 + Math.random() * 500; // 3.0–3.5 seconds
+
+    setTimeout(showRTBall, preDelay);
 }
+
+
 
 function showRTBall() {
-  rtBall.style.left = "50%";
-  rtBall.style.top = "50%";
-  rtBall.style.transform = "translate(-50%, -50%)";
-  rtBall.style.display = "block";
+    rtBall.style.left = "50%";
+    rtBall.style.top = "50%";
+    rtBall.style.transform = "translate(-50%, -50%)";
+    rtBall.style.display = "block";
 
-  rtStartTime = performance.now();
+    rtStartTime = performance.now();
+
+    // Clear any previous hide timer
+    if (rtHideTimer) clearTimeout(rtHideTimer);
+
+    // Independent random delay for disappearance
+    const hideDelay = 3000 + Math.random() * 500; // 3.0–3.5 seconds
+
+    rtHideTimer = setTimeout(() => {
+        if (rtBall.style.display === "block") {
+            // Missed trial
+            rtBall.style.display = "none";
+            rtTrial++;
+
+            if (rtTrial < RT_TRIALS) {
+                nextRTTrial();
+            } else {
+                finishRT();
+            }
+        }
+    }, hideDelay);
 }
+
 
 
 function finishRT() {
@@ -736,19 +765,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   btnRT.addEventListener("click", startRT);
   document.addEventListener("keydown", (e) => {
-    if (rtBall.style.display === "block" && e.code === "Space") {
-      const rt = performance.now() - rtStartTime;
-      rtResults.push(rt);
-      rtBall.style.display = "none";
-  
-      rtTrial++;
-      if (rtTrial < RT_TRIALS) {
-        nextRTTrial();
-      } else {
-        finishRT();
-      }
+    if (e.code === "Space" && rtBall.style.display === "block") {
+
+        const rt = performance.now() - rtStartTime;
+        rtResults.push(rt);
+
+        rtBall.style.display = "none";
+        rtTrial++;
+
+        if (rtTrial < RT_TRIALS) {
+            nextRTTrial();
+        } else {
+            finishRT();
+        }
     }
   });
+
   document.getElementById("complete-continue").addEventListener("click", () => {
     document.getElementById("test-complete").style.display = "none";
     showTestSelection();
