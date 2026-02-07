@@ -64,15 +64,6 @@ body {
   transition: width 300ms ease;
 }
 
-.card {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 24px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-}
-
 .section { display: none; }
 .section.active { display: block; }
 
