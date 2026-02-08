@@ -649,8 +649,6 @@ function showSummary() {
 
 document.addEventListener("DOMContentLoaded", () => {
   testSelectSection = document.getElementById("test-select-section");
-  document.getElementById("test-complete").style.display = "none";
-  document.getElementById("stroop-pause").style.display = "none";
 
   // Cache references to DOM elements
   studyTitleEl = document.getElementById("study-title");
