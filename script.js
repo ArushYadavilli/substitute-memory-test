@@ -167,7 +167,7 @@ const TEST_INSTRUCTIONS = {
     body: "A pink ball will appear at random intervals inside a white box. " +
       "Press SPACE as quickly as possible when you see it. " +
       "There are 20 trials. Do not press before the ball appears."
-  };
+  }
 let pendingTestStart = null;
 function showInstructions(testKey, startCallback) {
   const info = TEST_INSTRUCTIONS[testKey];
