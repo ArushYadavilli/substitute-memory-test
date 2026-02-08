@@ -326,25 +326,19 @@ function normalize(s) {
 }
 
 function hideAllSections() {
-  const ids = [
-    "setup-section",
-    "study-section",
-    "round-section",
-    "summary-section",
-    "test-select-section",
-    "stroop-section",
-    "digitspan-section",
-    "rt-section",
-    "stroop-pause",
-    "test-complete"
-  ];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove("active");
-  });
+ setupSection.classList.remove("active");
+ studySection.classList.remove("active");
+ roundSection.classList.remove("active");
+ summarySection.classList.remove("active");
+ testSelectSection.classList.remove("active");
+ stroopSection.classList.remove("active");
+ digitSpanSection.classList.remove("active");
+ rtSection.classList.remove("active");
+ const pause = document.getElementById("stroop-pause");
+ const complete = document.getElementById("test-complete");
+ if (pause) pause.classList.remove("active");
+ if (complete) complete.classList.remove("active");
 }
-
-
 
 function showTestSelection() {
   hideAllSections();
