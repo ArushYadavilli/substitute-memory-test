@@ -743,10 +743,36 @@ document.addEventListener("DOMContentLoaded", () => {
  });
 
  // ---- Test hub buttons (using .onclick = to prevent duplicate listeners) ----
+  document.querySelectorAll(".stroop-btn").forEach(btn => {
+ btn.addEventListener("click", () => {
+ if (!stroopSection.classList.contains("active")) return;
+ if (!currentStroopCorrectColor) return;
+ const chosen = btn.getAttribute("data-color");
+ if (chosen === currentStroopCorrectColor) {
+ if (currentStroopType === "congruent") stroopCongruentScore++;
+ else stroopIncongruentScore++;
+ stroopScoreDisplayEl.textContent =
+ "Correct: " + (currentStroopType === "congruent"
+ ? stroopCongruentScore : stroopIncongruentScore);
+ }
+ runStroopTrial();
+ });
+ });
  btnMemory.onclick = () => showInstructions("memory", startStudy);
  btnStroop.onclick = () => showInstructions("stroop", () => startStroop("congruent"));
  btnDigitSpan.onclick = () => showInstructions("digitspan", startDigitSpan);
  btnRT.onclick = () => showInstructions("rt", startRT);
+ rtBall.addEventListener("click", () => {
+ if (!rtSection.classList.contains("active")) return;
+ if (rtBall.style.display !== "block") return;
+ const rt = performance.now() - rtStartTime;
+ rtResults.push(rt);
+ rtBall.style.display = "none";
+ if (rtHideTimer) clearTimeout(rtHideTimer);
+ rtTrial++;
+ if (rtTrial < RT_TRIALS) nextRTTrial();
+ else finishRT();
+ });
 
  // ---- Instructions "Begin Test" button ----
  document.getElementById("instructions-start-btn").onclick = () => {
