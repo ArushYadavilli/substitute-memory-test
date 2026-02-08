@@ -592,15 +592,12 @@ function startRT() {
 }
 
 function nextRTTrial() {
-    rtBall.style.display = "none";
-
-    // Random delay before the ball appears
-    const preDelay = 3000 + Math.random() * 500; // 3.0–3.5 seconds
-
-    setTimeout(showRTBall, preDelay);
+  rtBall.style.display = "none";
+  const counter = document.getElementById("rt-trial-counter");
+  if (counter) counter.textContent = `Trial: ${rtTrial + 1} / ${RT_TRIALS}`;
+  const preDelay = 3000 + Math.random() * 500;
+  setTimeout(showRTBall, preDelay);
 }
-
-
 
 function showRTBall() {
     rtBall.style.left = "50%";
