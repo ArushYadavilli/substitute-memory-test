@@ -640,6 +640,9 @@ function showSummary() {
 // ======== Bootstrapping / Event Listeners ========
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("test-complete").style.display = "none";
+  document.getElementById("stroop-pause").style.display = "none";
+
   // Cache references to DOM elements
   studyTitleEl = document.getElementById("study-title");
   progressBarEl = document.getElementById("progress-bar");
