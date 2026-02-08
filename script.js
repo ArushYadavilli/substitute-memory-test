@@ -168,6 +168,7 @@ const TEST_INSTRUCTIONS = {
       "Press SPACE as quickly as possible when you see it. " +
       "There are 20 trials. Do not press before the ball appears."
   }
+};
 let pendingTestStart = null;
 function showInstructions(testKey, startCallback) {
   const info = TEST_INSTRUCTIONS[testKey];
