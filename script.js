@@ -294,7 +294,7 @@ function hideAllSections() {
   stroopSection.classList.remove("active");
   digitSpanSection.classList.remove("active"); // FIX
   rtSection.classList.remove("active"); // ← add this 
-  document.getElementById("stroop-pause").classlist.remove("active"); = "none"; // ← and this
+  document.getElementById("stroop-pause").classlist.remove("active"); // ← and this
   document.getElementById("test-complete").classlist.remove("active");
 
 }
