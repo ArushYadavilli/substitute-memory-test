@@ -796,9 +796,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     runStroopTrial();
   });
-  btnMemory.addEventListener("click", startStudy);
-  btnStroop.addEventListener("click", () => startStroop("congruent"));
-  btnDigitSpan.addEventListener("click", startDigitSpan);
+  btnMemory.addEventListener("click", () => showInstructions("memory", startStudy));
+  btnStroop.addEventListener("click", () => showInstructions("stroop", () => startStroop("congruent")));
+  btnDigitSpan.addEventListener("click", () => showInstructions("digitspan", startDigitSpan));
   digitSubmitBtn.addEventListener("click", submitDigitSpan);
   digitInputEl && digitInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitDigitSpan();
@@ -807,7 +807,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("stroop-pause").style.display = "none";
   startStroop("incongruent");
   });
-  btnRT.addEventListener("click", startRT);
+  btnRT.addEventListener("click", () => showInstructions("rt", startRT));
   document.addEventListener("keydown", (e) => {
     // Ignore auto-repeat events (holding space)
    if (e.code === "Space" && !e.repeat && rtBall.style.display === "block") {
