@@ -299,7 +299,7 @@ input:focus {
  left: 0;
  width: 100vw;
  height: 100vh;
- background: var(--card-bg, #f5f5f5);
+ background: var(--bg, #0f172a);
  justify-content: center;
  align-items: center;
  z-index: 9999;
@@ -311,7 +311,7 @@ input:focus {
 
 .pause-overlay {
   text-align: center;
-  color: #222; /* high contrast */
+  color: var(--text, #e5e7eb); /* high contrast */
 }
 
 #rt-area {
@@ -339,7 +339,7 @@ input:focus {
  left: 0;
  width: 100vw;
  height: 100vh;
- background: var(--card-bg, #f5f5f5);
+ background: var(--bg, #0f172a);
  justify-content: center;
  align-items: center;
  z-index: 9999;
@@ -351,7 +351,7 @@ input:focus {
 
 .complete-overlay {
   text-align: center;
-  color: #222;
+  color: var(--text, #e5e7eb);
 }
 
 .progress-wrap {
