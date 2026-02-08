@@ -257,20 +257,23 @@ function submitDigitSpan() {
     if (dssTrialCount >= DSS_TRIALS_PER_LEN) {
       dssCurrentLen++;
       dssTrialCount = 0;
+      dssFailuresAtLen = 0; // clean slate at new length
     }
   } else {
     dssFailuresAtLen++;
     dssTrialCount++;
-    if (dssTrialCount >= DSS_TRIALS_PER_LEN) {
-      dssTrialCount = 0;
-      if (dssFailuresAtLen >= 2) {
+    if (dssTrialCount >= DSS_TRIALS_PER_LEN)
+      if (dssFailuresAtLen >= DSS_TRIALS_PER_LEN) {
+        // Failed ALL trials at this length → end test
         endDigitSpan();
         return;
-      } else {
-        dssCurrentLen = Math.max(DSS_START_LEN, dssCurrentLen); // keep same length
       }
-    }
+    // Passed at least one trial — retry same length with fresh counters
+    dssTrialCount = 0;
+    dssFailuresAtLen = 0;
   }
+}
+
   if (dssCurrentLen > DSS_MAX_LEN) { endDigitSpan(); return; }
   showDigitSpanTrial();
 }
