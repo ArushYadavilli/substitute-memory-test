@@ -640,6 +640,7 @@ function showSummary() {
 // ======== Bootstrapping / Event Listeners ========
 
 document.addEventListener("DOMContentLoaded", () => {
+  testSelectSection = document.getElementById("test-select-section");
   document.getElementById("test-complete").style.display = "none";
   document.getElementById("stroop-pause").style.display = "none";
 
