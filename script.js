@@ -626,9 +626,12 @@ function showRTBall() {
 
 
 function finishRT() {
-  // compute average RT
-  let sum = rtResults.reduce((a, b) => a + b, 0);
-  rtBest = Math.round(sum / rtResults.length);
+   if (rtResults.length === 0) {
+     rtBest = -1; // sentinel: no valid responses recorded
+   } else {
+     let sum = rtResults.reduce((a, b) => a + b, 0);
+     rtBest = Math.round(sum / rtResults.length);
+   }
 
   // show result in RT section
   rtResultsEl.innerHTML = `Average RT: ${rtBest} ms`;
