@@ -803,6 +803,9 @@ document.addEventListener("DOMContentLoaded", () => {
   digitInputEl && digitInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitDigitSpan();
   });
+  document.getElementById("instructions-start-btn").addEventListener("click", () => {
+  if (pendingTestStart) pendingTestStart();
+  });
   document.getElementById("stroop-continue").addEventListener("click", () => {
   document.getElementById("stroop-pause").style.display = "none";
   startStroop("incongruent");
