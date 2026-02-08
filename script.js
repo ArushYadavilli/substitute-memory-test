@@ -349,18 +349,29 @@ function hideAllSections() {
 function showTestSelection() {
   hideAllSections();
   testSelectSection.classList.add("active");
-
-  btnMemory.style.display = testsRemaining.memory ? "block" : "none";
-  btnStroop.style.display = testsRemaining.stroop ? "block" : "none";
-  btnDigitSpan.style.display = testsRemaining.digitspan ? "block" : "none";
-  btnRT.style.display = testsRemaining.rt ? "block" : "none";
-
-  if (!testsRemaining.memory && !testsRemaining.stroop && !testsRemaining.digitspan && !testsRemaining.rt) {
-    showSummary();
-  } 
+  styleTestButton(btnMemory, testsRemaining.memory, "Memory Test");
+  styleTestButton(btnStroop, testsRemaining.stroop, "Stroop Task");
+  styleTestButton(btnDigitSpan, testsRemaining.digitspan, "Digit Span Sequencing");
+  styleTestButton(btnRT, testsRemaining.rt, "Reaction Time Test");
+  if (!testsRemaining.memory && !testsRemaining.stroop &&
+  !testsRemaining.digitspan && !testsRemaining.rt) {
+  showSummary();
+  }
 }
-
-
+function styleTestButton(btn, remaining, label) {
+  btn.style.display = "block";
+  if (remaining) {
+    btn.disabled = false;
+    btn.textContent = label;
+    btn.style.opacity = "1";
+    btn.style.cursor = "pointer";
+  } else {
+    btn.disabled = true;
+    btn.textContent = "✓ " + label;
+    btn.style.opacity = "0.5";
+    btn.style.cursor = "default";
+  }
+}
 // ======== Study Phase ========
 
 // Begins the study phase: shuffle pairs, show them one by one
