@@ -293,17 +293,16 @@ function endDigitSpan() {
 function arraysEqual(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
 
 function setPhase(name) {
-
-  setupSection.classList.toggle("active", name === "setup");
-  studySection.classList.toggle("active", name === "study");
-  roundSection.classList.toggle("active", name === "round");
-  summarySection.classList.toggle("active", name === "summary");
-  
-  testSelectSection.classList.remove("active");
-  stroopSection.classList.remove("active");
-
+  hideAllSections();
+  const sectionMap = {
+    setup: setupSection,
+    study: studySection,
+    round: roundSection,
+    summary: summarySection,
+  };
+  const target = sectionMap[name];
+  if (target) target.classList.add("active");
 }
-
 // Keeps the progress bar value safely between 0 and 100
 function clampProgress(pct) {
   progressBarEl.style.width = `${Math.max(0, Math.min(100, pct))}%`;
