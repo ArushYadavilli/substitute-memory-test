@@ -142,6 +142,41 @@ let scoreR2El;
 let scoreR3El;
 
 let studyTitleEl;
+// ======== Instructions ========
+const TEST_INSTRUCTIONS = {
+  memory: {
+    title: "Memory Test Instructions",
+    body: "You will study 12 word pairs, each shown for 3 seconds. " +
+      "Then you will be asked to recall the matching word for each cue. " +
+      "This repeats for 3 rounds. You have 8 seconds per answer."
+  },
+  stroop: {
+    title: "Stroop Task Instructions",
+    body: "Words will appear in colored ink. Press the key matching the INK COLOR, " +
+      "not the word itself. Keys: R = Red, B = Blue, G = Green, Y = Yellow. " +
+      "You have 45 seconds per phase (congruent then incongruent)."
+  },
+  digitspan: {
+    title: "Digit Span Sequencing Instructions",
+    body: "A sequence of digits will appear one at a time. After the sequence ends, " +
+      "type the digits back in ascending (smallest to largest) order. " +
+      "Sequences get longer as you succeed. You have 5 seconds to respond."
+  },
+  rt: {
+    title: "Reaction Time Instructions",
+    body: "A pink ball will appear at random intervals inside a white box. " +
+      "Press SPACE as quickly as possible when you see it. " +
+      "There are 20 trials. Do not press before the ball appears."
+  };
+let pendingTestStart = null;
+function showInstructions(testKey, startCallback) {
+  const info = TEST_INSTRUCTIONS[testKey];
+  document.getElementById("instructions-title").textContent = info.title;
+  document.getElementById("instructions-body").textContent = info.body;
+  pendingTestStart = startCallback;
+  hideAllSections();
+  document.getElementById("instructions-section").classList.add("active");
+}
 // ======== Utility Functions ========
 // Switches the app to a given phase and updates the UI
 
