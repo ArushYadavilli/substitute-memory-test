@@ -294,16 +294,19 @@ input:focus {
   #digitspan-input { font-size: 16px; }
 }
 #stroop-pause {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--card-bg, #f5f5f5); /* same as your site */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100vw;
+ height: 100vh;
+ background: var(--card-bg, #f5f5f5);
+ justify-content: center;
+ align-items: center;
+ z-index: 9999;
+ /* display is controlled by .section / .section.active */
+}
+#stroop-pause.active {
+ display: flex;
 }
 
 .pause-overlay {
@@ -331,17 +334,20 @@ input:focus {
 }
 
 #test-complete {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--card-bg, #f5f5f5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100vw;
+ height: 100vh;
+ background: var(--card-bg, #f5f5f5);
+ justify-content: center;
+ align-items: center;
+ z-index: 9999;
 }
+#test-complete.active {
+ display: flex;
+}
+
 
 .complete-overlay {
   text-align: center;
