@@ -214,10 +214,10 @@ function submitDigitSpan() {
   if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
   if (dssShowing) return;
   const raw = digitInputEl.value.replace(/\s+/g, "");
-  if (!raw) return;
-  const user = raw.split("").map(Number).filter(n=>!isNaN(n));
+  // Treat empty input as incorrect (don't return early)
+  const user = raw ? raw.split("").map(Number).filter(n => !isNaN(n)) : []
   const correct = [...dssSequence].sort((a,b)=>a-b);
-  if (arraysEqual(user, correct)) {
+  if (user.length > 0 && arraysEqual(user, correct)) {
     dssBest = Math.max(dssBest, dssCurrentLen);
     dssTrialCount++;
     dssFailuresAtLen = 0;
