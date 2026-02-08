@@ -85,6 +85,8 @@ let currentRound = 0;
 
 // Index of the current pair being shown during study
 let studyIdx = 0;
+let currentOrder = [];
+let participantIdInput;
 
 // Timer reference for study phase (so we can clear it later)
 let studyTimer = null;
