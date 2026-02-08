@@ -827,7 +827,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pendingTestStart) pendingTestStart();
   });
   document.getElementById("stroop-continue").addEventListener("click", () => {
-  document.getElementById("stroop-pause").style.display = "none";
+  document.getElementById("stroop-pause").classList.remove("active");
   startStroop("incongruent");
   });
   btnRT.onclick() => showInstructions("rt", startRT);
