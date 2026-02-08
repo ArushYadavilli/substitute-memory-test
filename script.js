@@ -778,9 +778,9 @@ document.addEventListener("DOMContentLoaded", () => {
   btnRT.addEventListener("click", startRT);
   document.addEventListener("keydown", (e) => {
     // Ignore auto-repeat events (holding space)
-    if (e.code === "Space" && !e.repeat && rtBall.style.display === "block") {
-
-        const rt = performance.now() - rtStartTime;
+   if (e.code === "Space" && !e.repeat && rtBall.style.display === "block") {
+        e.preventDefault();
+        const rt = performance.now() - rtStartTime
         rtResults.push(rt);
 
         rtBall.style.display = "none";
