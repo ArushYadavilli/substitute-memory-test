@@ -644,66 +644,50 @@ function showSummary() {
 // ======== Bootstrapping / Event Listeners ========
 
 document.addEventListener("DOMContentLoaded", () => {
-  hideAllSections();
-  setupSection.classList.add("active");
-
-  document.getElementById("test-complete").style.display = "";
-  document.getElementById("stroop-pause").style.display = "";
-
-  testSelectSection = document.getElementById("test-select-section");
-
-  // Cache references to DOM elements
-  studyTitleEl = document.getElementById("study-title");
-  progressBarEl = document.getElementById("progress-bar");
-  
-  setupSection = document.getElementById("setup-section");
-  studySection = document.getElementById("study-section");
-  roundSection = document.getElementById("round-section");
-  summarySection = document.getElementById("summary-section");
-
-  weekInput = document.getElementById("week-input");
-  participantIdInput = document.getElementById("participant-id");
-  startBtn = document.getElementById("start-btn");
-
-  pairLeftEl = document.getElementById("pair-left");
-  pairRightEl = document.getElementById("pair-right");
-
-  roundTitleEl = document.getElementById("round-title");
-  roundListEl = document.getElementById("round-list");
-  submitRoundBtn = document.getElementById("submit-round-btn");
-
-  digitSpanSection = document.getElementById("digitspan-section");
-  btnDigitSpan = document.getElementById("btn-digitspan");
-  digitDisplayEl = document.getElementById("digitspan-display");
-  digitInputEl = document.getElementById("digitspan-input");
-  digitSubmitBtn = document.getElementById("digitspan-submit");
-  digitTimerEl = document.getElementById("digitspan-timer");
-  digitScoreEl = document.getElementById("digitspan-score");
-  scoreDigitSpanEl = document.getElementById("score-digitspan"); // add to summary HTML
-
-
-  
-  scoreR1El = document.getElementById("score-r1");
-  scoreR2El = document.getElementById("score-r2");
-  scoreR3El = document.getElementById("score-r3");
-  testSelectSection = document.getElementById("test-select-section");
-  btnMemory = document.getElementById("btn-memory");
-  btnStroop = document.getElementById("btn-stroop");
-  
-  stroopSection = document.getElementById("stroop-section");
-  stroopWordEl = document.getElementById("stroop-word");
-  stroopTimerEl = document.getElementById("stroop-timer");
+ // 1. Cache ALL DOM references FIRST (before any hide/show logic)
+ studyTitleEl = document.getElementById("study-title");
+ progressBarEl = document.getElementById("progress-bar");
+ setupSection = document.getElementById("setup-section");
+ studySection = document.getElementById("study-section");
+ roundSection = document.getElementById("round-section");
+ summarySection = document.getElementById("summary-section");
+ testSelectSection = document.getElementById("test-select-section");
+ stroopSection = document.getElementById("stroop-section");
+ digitSpanSection = document.getElementById("digitspan-section");
+ rtSection = document.getElementById("rt-section");
+ weekInput = document.getElementById("week-input");
+ participantIdInput = document.getElementById("participant-id");
+ startBtn = document.getElementById("start-btn");
+ pairLeftEl = document.getElementById("pair-left");
+ pairRightEl = document.getElementById("pair-right");
+ roundTitleEl = document.getElementById("round-title");
+ roundListEl = document.getElementById("round-list");
+ submitRoundBtn = document.getElementById("submit-round-btn");
+ digitDisplayEl = document.getElementById("digitspan-display");
+ digitInputEl = document.getElementById("digitspan-input");
+ digitSubmitBtn = document.getElementById("digitspan-submit");
+ digitTimerEl = document.getElementById("digitspan-timer");
+ digitScoreEl = document.getElementById("digitspan-score");
+ scoreDigitSpanEl = document.getElementById("score-digitspan");
+ scoreR1El = document.getElementById("score-r1");
+ scoreR2El = document.getElementById("score-r2");
+ scoreR3El = document.getElementById("score-r3");
+ btnMemory = document.getElementById("btn-memory");
+ btnStroop = document.getElementById("btn-stroop");
+ btnDigitSpan = document.getElementById("btn-digitspan");
+ btnRT = document.getElementById("btn-rt");
+ stroopWordEl = document.getElementById("stroop-word");
+ stroopTimerEl = document.getElementById("stroop-timer");
   stroopScoreDisplayEl = document.getElementById("stroop-score-display");
-  
-  scoreStroopCongEl = document.getElementById("score-stroop-cong");
-  scoreStroopIncongEl = document.getElementById("score-stroop-incong");
-
-  rtSection = document.getElementById("rt-section");
-  rtBall = document.getElementById("rt-ball");
-  rtArea = document.getElementById("rt-area");
-  rtResultsEl = document.getElementById("rt-results");
-  btnRT = document.getElementById("btn-rt");
-  
+ scoreStroopCongEl = document.getElementById("score-stroop-cong");
+ scoreStroopIncongEl = document.getElementById("score-stroop-incong");
+ rtBall = document.getElementById("rt-ball");
+ rtArea = document.getElementById("rt-area");
+ rtResultsEl = document.getElementById("rt-results");
+ // 2. NOW safe to manipulate visibility
+ hideAllSections();
+ setupSection.classList.add("active");
+ // (removed the old style.display="" lines — no longer needed with CSS fix)
     // Start button listener
   startBtn.addEventListener("click", () => {
     const participantId = participantIdInput.value.trim();
