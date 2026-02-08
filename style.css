@@ -351,31 +351,3 @@ input:focus {
 .progress-wrap {
   display: none !important;
 }
-
-.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 9999;
-  padding: 0;
-  margin: 0;
-}
-
-.fullscreen > div {
-  background: #111827;
-  padding: 40px 50px;
-  border-radius: 16px;
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
-}
