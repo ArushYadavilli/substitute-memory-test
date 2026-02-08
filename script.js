@@ -480,6 +480,9 @@ function showNextCue() {
   roundListEl.appendChild(item);
 
   inputEl.focus();
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); submitRoundBtn.click(); }
+  });
 
   // Start 5-second auto-advance timer
   if (answerTimer) clearTimeout(answerTimer);
