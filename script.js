@@ -707,12 +707,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const week = val;  // reuse val, no redeclaration
 
-    const lockKey = `completed_${participantId}_week_${week}`;
-    if (localStorage.getItem(lockKey)) {
-      alert("You have already completed this week's tests.");
-      return;
+    const lockKey = `testlock_${participantId}_week_${week}`;
+    const lockStatus = localStorage.getItem(lockKey);
+    if (lockStatus === "completed") {
+    alert("You have already completed all tests for this week. You cannot re-enter.");
+    return;
     }
-
+    if (lockStatus === "started") {
+    const proceed = confirm(
+    "It looks like you started this week's tests but didn't finish. " +
+    "All tests will restart from the beginning. Continue?"
+    );
+    if (!proceed) return;
+    }
+    // Mark as started
+    localStorage.setItem(lockKey, "started");
     weekNumber = val;
     wordsetIndex = selectWordset(weekNumber);
 
