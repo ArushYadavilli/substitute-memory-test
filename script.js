@@ -644,6 +644,9 @@ function showSummary() {
 // ======== Bootstrapping / Event Listeners ========
 
 document.addEventListener("DOMContentLoaded", () => {
+  hideAllSections();
+  setupSection.classList.add("active");
+
   document.getElementById("test-complete").style.display = "";
   document.getElementById("stroop-pause").style.display = "";
 
