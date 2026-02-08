@@ -218,9 +218,6 @@ function showDigitSpanTrial() {
       submitDigitSpan(); // auto-submit with whatever is typed (even empty)
   }, 5000);
 
-}
-
-
 function generateSequence(len) {
   const seq = [];
   for (let i=0;i<len;i++) seq.push(Math.floor(Math.random()*9)+1);
