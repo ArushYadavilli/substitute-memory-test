@@ -797,21 +797,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     runStroopTrial();
   });
-  btnMemory.addEventListener("click", () => showInstructions("memory", startStudy));
-  btnStroop.addEventListener("click", () => showInstructions("stroop", () => startStroop("congruent")));
-  btnDigitSpan.addEventListener("click", () => showInstructions("digitspan", startDigitSpan));
+  btnMemory.onclick() => showInstructions("memory", startStudy);
+  btnStroop.onclick() => showInstructions("stroop", () => startStroop("congruent"));
+  btnDigitSpan.onclick() => showInstructions("digitspan", startDigitSpan);
   digitSubmitBtn.addEventListener("click", submitDigitSpan);
   digitInputEl && digitInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") submitDigitSpan();
   });
-  document.getElementById("instructions-start-btn").addEventListener("click", () => {
-  if (pendingTestStart) pendingTestStart();
+  document.getElementById("instructions-start-btn").onclick() => {
+    if (pendingTestStart) pendingTestStart();
   });
   document.getElementById("stroop-continue").addEventListener("click", () => {
   document.getElementById("stroop-pause").style.display = "none";
   startStroop("incongruent");
   });
-  btnRT.addEventListener("click", () => showInstructions("rt", startRT));
+  btnRT.onclick() => showInstructions("rt", startRT);
   document.addEventListener("keydown", (e) => {
     // Ignore auto-repeat events (holding space)
    if (e.code === "Space" && !e.repeat && rtBall.style.display === "block") {
