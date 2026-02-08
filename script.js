@@ -240,7 +240,7 @@ function submitDigitSpan() {
 function endDigitSpan() {
     testsRemaining.digitspan = false;
     hideAllSections();
-    document.getElementById("test-complete").style.display = "flex";
+    document.getElementById("test-complete").classlist.add("active");
 }
 
 // small helper
@@ -294,8 +294,8 @@ function hideAllSections() {
   stroopSection.classList.remove("active");
   digitSpanSection.classList.remove("active"); // FIX
   rtSection.classList.remove("active"); // ← add this 
-  document.getElementById("stroop-pause").style.display = "none"; // ← and this
-  document.getElementById("test-complete").style.display = "none";
+  document.getElementById("stroop-pause").classlist.remove("active"); = "none"; // ← and this
+  document.getElementById("test-complete").classlist.remove("active");
 
 }
 
@@ -406,7 +406,7 @@ function showNextCue() {
     } else {
       testsRemaining.memory = false; // optional here, but safe 
       hideAllSections(); 
-      document.getElementById("test-complete").style.display = "flex";
+      document.getElementById("test-complete").classlist.add("active");
     }
     return;
   }
@@ -525,11 +525,11 @@ function runStroopTrial() {
 function handleStroopEnd() {
     if (currentStroopType === "congruent") {
         hideAllSections();
-        document.getElementById("stroop-pause").style.display = "flex";
+        document.getElementById("stroop-pause").classlist.add("active");
     } else {
         testsRemaining.stroop = false;
         hideAllSections();
-        document.getElementById("test-complete").style.display = "flex";
+        document.getElementById("test-complete").classlist.add("active");
     }
 }
 
@@ -602,7 +602,7 @@ function finishRT() {
   }
 
   hideAllSections();
-  document.getElementById("test-complete").style.display = "flex";
+  document.getElementById("test-complete").classlist.add("active");
 }
 
 
