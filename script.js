@@ -157,22 +157,25 @@ function startDigitSpan() {
 function showDigitSpanTrial() {
   hideAllSections();
   digitSpanSection.classList.add("active");
-
   digitInputEl.value = "";
   digitInputEl.disabled = true;
-  digitSubmitBtn.disabled = true;   // PATCH
-
+  digitSubmitBtn.disabled = true;
   digitScoreEl.textContent = `Best: ${dssBest}`;
   dssSequence = generateSequence(dssCurrentLen);
-
   dssShowing = true;
-
+  // Clear any leftover timer from previous trial
+  if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
   displaySequence(dssSequence).then(() => {
-    dssShowing = false;
-    digitInputEl.disabled = false;
-    digitSubmitBtn.disabled = false;  // PATCH
-    digitInputEl.focus();
+  dssShowing = false;
+  digitInputEl.disabled = false;
+  digitSubmitBtn.disabled = false;
+  digitInputEl.focus();
+  // Start 5-second response timer AFTER sequence finishes displaying
+  digitAnswerTimer = setTimeout(() => {
+  submitDigitSpan();
+  }, 5000);
   });
+}
   // Start 5-second response timer
   if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
   digitAnswerTimer = setTimeout(() => {
