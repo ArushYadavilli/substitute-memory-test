@@ -644,6 +644,9 @@ function showSummary() {
 // ======== Bootstrapping / Event Listeners ========
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("test-complete").style.display = "";
+  document.getElementById("stroop-pause").style.display = "";
+
   testSelectSection = document.getElementById("test-select-section");
 
   // Cache references to DOM elements
@@ -791,7 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   document.getElementById("complete-continue").addEventListener("click", () => {
-    document.getElementById("test-complete").style.display = "none";
+    document.getElementById("test-complete").classList.remove("active");
     showTestSelection();
   });
 
