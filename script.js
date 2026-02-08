@@ -286,18 +286,26 @@ function normalize(s) {
 }
 
 function hideAllSections() {
+  // Prevent hiding if fullscreen screens are active
+  if (document.getElementById("stroop-pause").classList.contains("active")) return;
+  if (document.getElementById("test-complete").classList.contains("active")) return;
+
   setupSection.classList.remove("active");
   studySection.classList.remove("active");
   roundSection.classList.remove("active");
   summarySection.classList.remove("active");
   testSelectSection.classList.remove("active");
   stroopSection.classList.remove("active");
-  digitSpanSection.classList.remove("active"); // FIX
-  rtSection.classList.remove("active"); // ← add this 
-  document.getElementById("stroop-pause").classList.remove("active"); // ← and this
-  document.getElementById("test-complete").classList.remove("active");
+  digitSpanSection.classList.remove("active");
+  rtSection.classList.remove("active");
 
+  const pause = document.getElementById("stroop-pause");
+  const complete = document.getElementById("test-complete");
+
+  if (pause) pause.classList.remove("active");
+  if (complete) complete.classList.remove("active");
 }
+
 
 
 function showTestSelection() {
