@@ -639,6 +639,9 @@ function showSummary() {
     digitSpanSequencing: dssBest, 
     reactionTime: rtBest
   };
+   // Lock this participant+week so they can't re-enter
+  const lockKey = `completed_${participantId}_week_${weekNumber}`;
+  localStorage.setItem(lockKey, new Date().toISOString())
   submitToGoogleForms();
 }
 // ======== Bootstrapping / Event Listeners ========
