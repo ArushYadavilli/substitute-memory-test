@@ -346,6 +346,7 @@ input:focus {
   position: absolute;
   display: none;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 #test-complete {
