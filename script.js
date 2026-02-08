@@ -274,7 +274,12 @@ function submitDigitSpan() {
   }
 }
 
-  if (dssCurrentLen > DSS_MAX_LEN) { endDigitSpan(); return; }
+  if (dssCurrentLen > DSS_MAX_LEN) 
+  { 
+      endDigitSpan();
+      return; 
+  }
+
   showDigitSpanTrial();
 }
 
