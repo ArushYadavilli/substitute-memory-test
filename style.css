@@ -241,6 +241,21 @@ input:focus {
   text-align: center;
 }
 
+.stroop-buttons {
+ display: flex;
+ justify-content: center;
+ gap: 10px;
+ margin-top: 12px;
+}
+.stroop-btn {
+ padding: 12px 20px;
+ border: none;
+ border-radius: 10px;
+ font-weight: 700;
+ font-size: 16px;
+ cursor: pointer;
+ min-width: 70px;
+}
 /* Digit Span Sequencing theme-aware styles */
 #digitspan-section.card {
   text-align: center;
