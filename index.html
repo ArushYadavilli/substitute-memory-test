@@ -18,7 +18,7 @@
         </div>
       </div>
     </header>
-
+ 
     <main class="card">
       <section id="setup-section" class="section active">
         <h1 class="title">Welcome</h1>
@@ -39,11 +39,40 @@
         <button class="btn primary" id="start-btn">Start</button>
         <p class="hint">After entering your information, you will be directed to a test hub where you will complete all required tests for this week.</p>
       </section>
-
+ 
+      <!-- Sleep Survey Section -->
+      <section id="sleep-section" class="section">
+        <h1 class="title">Sleep Survey</h1>
+        <p class="subtitle">Please answer the following questions about your sleep over the past week.</p>
+ 
+        <div class="form-row">
+          <label for="sleep-time">What was the average time you went to sleep?</label>
+          <input type="text" id="sleep-time" placeholder="e.g., 11:30 PM" autocomplete="off" maxlength="8" />
+          <span class="hint">Format: HH:MM AM/PM</span>
+        </div>
+ 
+        <div class="form-row">
+          <label for="wake-time">What was the average time you woke up?</label>
+          <input type="text" id="wake-time" placeholder="e.g., 7:00 AM" autocomplete="off" maxlength="8" />
+          <span class="hint">Format: HH:MM AM/PM</span>
+        </div>
+ 
+        <div class="form-row">
+          <label for="sleep-abnormal">Would you say this is abnormal compared to your normal schedule?</label>
+          <select id="sleep-abnormal">
+            <option value="" disabled selected>Select an option</option>
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+ 
+        <button class="btn primary" id="sleep-submit-btn">Continue to Tests</button>
+      </section>
+ 
       <section id="test-select-section" class="section">
         <h1 class="title">Choose a Test</h1>
         <p class="subtitle">Complete all tests for this week.</p>
-
+ 
         <div class="test-buttons">
           <button class="btn primary" id="btn-memory">Memory Test</button>
           <button class="btn primary" id="btn-stroop">Stroop Task</button>
@@ -69,25 +98,25 @@
         <div class="controls">
         </div>
       </section>
-
+ 
       <section id="round-section" class="section">
         <h2 class="title" id="round-title">Round</h2>
         <p class="subtitle">Type the matching word for each cue. Complete all 12 inputs.</p>
-
+ 
         <div id="round-list" class="round-list"></div>
-
+ 
         <div class="controls">
           <button class="btn" id="submit-round-btn">Submit Answer</button>
         </div>
       </section>
-
-
+ 
+ 
       <section id="stroop-section" class="section">
         <h2 class="title">Stroop Task</h2>
         <p class="subtitle">Press the key that matches the INK COLOR.</p>
-
+ 
         <div id="stroop-word" class="stroop-word">WORD</div>
-
+ 
         <p class="hint">Keys: R = Red, B = Blue, G = Green, Y = Yellow</p>
         <div class="stroop-buttons">
           <button class="stroop-btn" data-color="red" style="background:red;color:white;">Red</button>
@@ -98,7 +127,7 @@
         <p class="hint" id="stroop-timer">Time left: 45s</p>
         <p class="hint" id="stroop-score-display">Correct: 0</p>
       </section>
-
+ 
       <!-- Digit Span Sequencing section -->
       <section id="digitspan-section" class="section card">
         <h2>Digit Span Sequencing</h2>
@@ -108,7 +137,7 @@
         <button id="digitspan-submit" class="btn primary">Submit</button>
         <div id="digitspan-score">Score: 0</div>
       </section>
-
+ 
       <section id="rt-section" class="section card">
         <h2>Reaction Time Test</h2>
         <p>Press SPACE whenever you see the pink ball.</p>      
@@ -118,7 +147,7 @@
         <p id="rt-trial-counter" class="hint">Trial: 0 / 20</p>
         <div id="rt-results"></div>
       </section>
-
+ 
       <section id="summary-section" class="section">
         <h2 class="title">Summary</h2>
         <div class="score-grid">
@@ -139,12 +168,12 @@
           <div class="score-label">Stroop Congruent</div>
           <div class="score-value" id="score-stroop-cong">0</div>
         </div>
-
+ 
         <div class="score-card">
           <div class="score-label">Stroop Incongruent</div>
           <div class="score-value" id="score-stroop-incong">0</div>
         </div>
-
+ 
         <div class="score-card">
           <div class="score-label">Digit Span Sequencing</div>
           <div class="score-value" id="score-digitspan">0</div>
@@ -153,7 +182,7 @@
           <div class="score-label">Reaction Time (ms)</div>
           <div class="score-value" id="score-rt">0</div>
         </div>
-
+ 
         <div class="controls">
         </div>
         
@@ -165,7 +194,7 @@
           <button id="stroop-continue" class="btn primary">Continue</button>
         </div>
       </section>
-
+ 
       <section id="test-complete" class="section">
         <div class="complete-overlay">
           <h2>Test Complete</h2>
@@ -174,12 +203,12 @@
         </div>
       </section>
     </main>
-
+ 
     <footer class="footer">
       <div>© ADChronotype Study — Test Bank</div>
     </footer>
   </div>
-
+ 
   <script src="script.js"></script>
 </body>
 </html>
