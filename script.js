@@ -1,5 +1,5 @@
 // ======== Configuration ========
-
+ 
 let rtCurrentDelay = 0;
 let rtHideTimer = null;
 let digitAnswerTimer = null;
@@ -11,14 +11,15 @@ let testsRemaining = {
  digitspan: true,
  rt: true
 };
-
+ 
 // Digit Span Sequencing globals
 let digitSpanSection, btnDigitSpan, digitDisplayEl, digitInputEl, digitSubmitBtn, digitTimerEl, digitScoreEl;
 const DSS_START_LEN = 3;
 const DSS_MAX_LEN = 9;
 const DSS_TRIALS_PER_LEN = 2;
 const DSS_DISPLAY_MS = 1000;
-const DSS_GAP_MS = 300;
+const DSS_GAP_MS = 600;
+const DSS_INTER_TRIAL_MS = 1500;
 let dssCurrentLen = DSS_START_LEN;
 let dssTrialCount = 0;
 let dssFailuresAtLen = 0;
@@ -27,13 +28,13 @@ let dssSequence = [];
 let dssShowing = false;
 let stroopCongruentScore = 0;
 let stroopIncongruentScore = 0;
-
+ 
 const STROOP_COLORS = ["red", "blue", "green", "yellow"];
 let currentStroopCorrectColor = "";
 let currentStroopType = "";
 let stroopTimerId = null;
 let stroopTimeLeft = 45;
-
+ 
 const WORDSETS = [
  [
  ["cat", "ring"], ["sun", "jam"], ["bed", "rope"], ["fish", "bell"],
@@ -51,19 +52,19 @@ const WORDSETS = [
  ["barn", "cat"], ["rope", "tree"], ["bird", "road"], ["jam", "ship"],
  ],
 ];
-
+ 
 // Reaction Time globals
 let rtSection, rtArea, rtBall, rtStartBtn, rtResultsEl, btnRT;
 let rtStartTime = 0;
 let rtResults = [];
 let rtTrial = 0;
 const RT_TRIALS = 20;
-
+ 
 const STUDY_MS = 3000;
 const ANSWER_TIME_LIMIT = 8000;
-
+ 
 // ======== State ========
-
+ 
 let weekNumber = null;
 let wordsetIndex = 0;
 let pairs = [];
@@ -78,9 +79,9 @@ let answerTimer = null;
 let roundOneScore = 0;
 let roundTwoScore = 0;
 let roundThreeScore = 0;
-
+ 
 // ======== Elements ========
-
+ 
 let phaseLabelEl;
 let progressBarEl;
 let setupSection;
@@ -98,9 +99,9 @@ let scoreR1El;
 let scoreR2El;
 let scoreR3El;
 let studyTitleEl;
-
+ 
 // ======== Instructions ========
-
+ 
 const TEST_INSTRUCTIONS = {
  memory: {
  title: "Memory Test Instructions",
@@ -127,9 +128,9 @@ const TEST_INSTRUCTIONS = {
  "There are 20 trials. Do not press before the ball appears."
  }
 };
-
+ 
 let pendingTestStart = null;
-
+ 
 function showInstructions(testKey, startCallback) {
  const info = TEST_INSTRUCTIONS[testKey];
  document.getElementById("instructions-title").textContent = info.title;
@@ -138,9 +139,9 @@ function showInstructions(testKey, startCallback) {
  hideAllSections();
  document.getElementById("instructions-section").classList.add("active");
 }
-
+ 
 // ======== Utility Functions ========
-
+ 
 function startDigitSpan() {
  testsRemaining.digitspan = true;
  dssCurrentLen = DSS_START_LEN;
@@ -149,7 +150,7 @@ function startDigitSpan() {
  dssBest = 0;
  showDigitSpanTrial();
 }
-
+ 
 function showDigitSpanTrial() {
  hideAllSections();
  digitSpanSection.classList.add("active");
@@ -159,29 +160,29 @@ function showDigitSpanTrial() {
  digitScoreEl.textContent = `Best: ${dssBest}`;
  dssSequence = generateSequence(dssCurrentLen);
  dssShowing = true;
-
+ 
  // Clear any leftover timer from previous trial
  if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
-
+ 
  displaySequence(dssSequence).then(() => {
  dssShowing = false;
  digitInputEl.disabled = false;
  digitSubmitBtn.disabled = false;
  digitInputEl.focus();
-
+ 
  // Start 5-second response timer AFTER sequence finishes displaying
  digitAnswerTimer = setTimeout(() => {
  submitDigitSpan();
  }, 5000);
  });
 }
-
+ 
 function generateSequence(len) {
  const seq = [];
  for (let i = 0; i < len; i++) seq.push(Math.floor(Math.random() * 9) + 1);
  return seq;
 }
-
+ 
 async function displaySequence(seq) {
  digitSubmitBtn.disabled = true;
  digitDisplayEl.textContent = "";
@@ -194,16 +195,16 @@ async function displaySequence(seq) {
  digitDisplayEl.textContent = "NOW";
  digitSubmitBtn.disabled = false;
 }
-
+ 
 function submitDigitSpan() {
  if (digitAnswerTimer) clearTimeout(digitAnswerTimer);
  if (dssShowing) return;
-
+ 
  const raw = digitInputEl.value.replace(/\s+/g, "");
  // Treat empty input as incorrect (don't return early)
  const user = raw ? raw.split("").map(Number).filter(n => !isNaN(n)) : [];
  const correct = [...dssSequence].sort((a, b) => a - b);
-
+ 
  if (user.length > 0 && arraysEqual(user, correct)) {
  dssBest = Math.max(dssBest, dssCurrentLen);
  dssTrialCount++;
@@ -227,27 +228,31 @@ function submitDigitSpan() {
  dssFailuresAtLen = 0;
  }
  }
-
+ 
  if (dssCurrentLen > DSS_MAX_LEN) {
  endDigitSpan();
  return;
  }
-
- showDigitSpanTrial();
+ 
+ // Brief inter-trial pause so mobile users can prepare
+ digitInputEl.disabled = true;
+ digitSubmitBtn.disabled = true;
+ digitDisplayEl.textContent = "Get ready…";
+ setTimeout(() => showDigitSpanTrial(), DSS_INTER_TRIAL_MS);
 }
-
+ 
 function endDigitSpan() {
  testsRemaining.digitspan = false;
  hideAllSections();
  document.getElementById("test-complete").classList.add("active");
 }
-
+ 
 function arraysEqual(a, b) {
  if (a.length !== b.length) return false;
  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
  return true;
 }
-
+ 
 function setPhase(name) {
  hideAllSections();
  const sectionMap = {
@@ -259,17 +264,17 @@ function setPhase(name) {
  const target = sectionMap[name];
  if (target) target.classList.add("active");
 }
-
+ 
 function clampProgress(pct) {
  progressBarEl.style.width = `${Math.max(0, Math.min(100, pct))}%`;
 }
-
+ 
 function selectWordset(weekNum) {
  const idx = ((weekNum % 3) + 3) % 3;
  const map = { 1: 0, 2: 1, 0: 2 };
  return map[idx];
 }
-
+ 
 function shuffle(arr) {
  const a = arr.slice();
  for (let i = a.length - 1; i > 0; i--) {
@@ -278,14 +283,15 @@ function shuffle(arr) {
  }
  return a;
 }
-
+ 
 function normalize(s) {
  return (s || "").trim().toLowerCase();
 }
-
+ 
 function hideAllSections() {
  const ids = [
  "setup-section",
+ "sleep-section",
  "study-section",
  "round-section",
  "summary-section",
@@ -302,7 +308,7 @@ function hideAllSections() {
  if (el) el.classList.remove("active");
  });
 }
-
+ 
 function showTestSelection() {
  hideAllSections();
  testSelectSection.classList.add("active");
@@ -315,7 +321,7 @@ function showTestSelection() {
  showSummary();
  }
 }
-
+ 
 function styleTestButton(btn, remaining, label) {
  btn.style.display = "block";
  if (remaining) {
@@ -330,9 +336,9 @@ function styleTestButton(btn, remaining, label) {
  btn.style.cursor = "default";
  }
 }
-
+ 
 // ======== Study Phase ========
-
+ 
 function startStudy() {
  setPhase("study");
  studyIdx = 0;
@@ -342,7 +348,7 @@ function startStudy() {
  studyTimer = setInterval(nextStudyPair, STUDY_MS);
  studyTitleEl.textContent = "Study the pairs — Round 1 of 3";
 }
-
+ 
 function renderStudyPair() {
  const [L, R] = pairs[studyIdx];
  pairLeftEl.textContent = L;
@@ -350,7 +356,7 @@ function renderStudyPair() {
  const pct = (studyIdx / pairs.length) * 100;
  clampProgress(pct);
 }
-
+ 
 function nextStudyPair() {
  studyIdx++;
  if (studyIdx >= pairs.length) {
@@ -361,9 +367,9 @@ function nextStudyPair() {
  }
  renderStudyPair();
 }
-
+ 
 // ======== Round Phase ========
-
+ 
 function startRound(n) {
  currentRound = n;
  currentCorrect = 0;
@@ -373,7 +379,7 @@ function startRound(n) {
  currentCueIndex = 0;
  showNextCue();
 }
-
+ 
 function submitToGoogleForms() {
  const formBaseURL = "https://docs.google.com/forms/d/e/1FAIpQLSfDYc6N1uShHFxDf99ClzNrMYOqKR5ok9p-jc1RWUCtegspuA/formResponse";
  const params = new URLSearchParams({
@@ -393,15 +399,15 @@ function submitToGoogleForms() {
  body: params
  });
 }
-
+ 
 function showNextCue() {
  roundListEl.innerHTML = "";
-
+ 
  if (currentCueIndex >= currentOrder.length) {
  if (currentRound === 1) roundOneScore = currentCorrect;
  if (currentRound === 2) roundTwoScore = currentCorrect;
  if (currentRound === 3) roundThreeScore = currentCorrect;
-
+ 
  if (currentRound < 3) {
  startStudyAgainThenRound(currentRound + 1);
  } else {
@@ -411,40 +417,40 @@ function showNextCue() {
  }
  return;
  }
-
+ 
  const idx = currentOrder[currentCueIndex];
  const cue = pairs[idx][0];
  const target = pairs[idx][1];
-
+ 
  const item = document.createElement("div");
  item.className = "round-item";
-
+ 
  const cueEl = document.createElement("div");
  cueEl.className = "cue";
  cueEl.textContent = cue;
-
+ 
  const inputEl = document.createElement("input");
  inputEl.type = "text";
  inputEl.placeholder = "Type the matching word";
  inputEl.autocomplete = "off";
-
+ 
  item.appendChild(cueEl);
  item.appendChild(inputEl);
  roundListEl.appendChild(item);
-
+ 
  inputEl.focus();
-
+ 
  // Fix 11: Enter key submits answer
  inputEl.addEventListener("keydown", (e) => {
  if (e.key === "Enter") { e.preventDefault(); submitRoundBtn.click(); }
  });
-
+ 
  if (answerTimer) clearTimeout(answerTimer);
  answerTimer = setTimeout(() => {
  currentCueIndex++;
  showNextCue();
  }, ANSWER_TIME_LIMIT);
-
+ 
  submitRoundBtn.onclick = () => {
  clearTimeout(answerTimer);
  const val = normalize(inputEl.value);
@@ -455,7 +461,7 @@ function showNextCue() {
  showNextCue();
  };
 }
-
+ 
 function startStudyAgainThenRound(nextRoundNum) {
  studyTitleEl.textContent = `Study the pairs — Round ${nextRoundNum} of 3`;
  setPhase("study");
@@ -463,7 +469,7 @@ function startStudyAgainThenRound(nextRoundNum) {
  pairs = shuffle(pairs);
  clampProgress(0);
  renderStudyPair();
-
+ 
  if (studyTimer) clearInterval(studyTimer);
  studyTimer = setInterval(() => {
  studyIdx++;
@@ -476,23 +482,72 @@ function startStudyAgainThenRound(nextRoundNum) {
  }
  }, STUDY_MS);
 }
-
+ 
 // ======== Stroop Phase ========
-
+ 
+let sleepData = { sleepTime: "", wakeTime: "", abnormal: "" };
+ 
+// ---- Time input auto-formatting ----
+function setupTimeInput(inputId) {
+ const el = document.getElementById(inputId);
+ if (!el) return;
+ el.addEventListener("input", () => {
+  let val = el.value.replace(/[^0-9aApPmM: ]/g, "");
+  el.value = val;
+ });
+ el.addEventListener("blur", () => {
+  const raw = el.value.trim();
+  // Validate 12-hr format: H:MM AM/PM or HH:MM AM/PM
+  const match = raw.match(/^(1[0-2]|0?[1-9]):([0-5][0-9])\s*(AM|PM|am|pm)$/i);
+  if (raw && !match) {
+   el.style.borderColor = "var(--danger)";
+  } else {
+   el.style.borderColor = "";
+   if (match) el.value = match[1] + ":" + match[2] + " " + match[3].toUpperCase();
+  }
+ });
+}
+ 
+function showSleepSurvey() {
+ hideAllSections();
+ document.getElementById("sleep-section").classList.add("active");
+}
+ 
+function validateSleepSurvey() {
+ const sleepTime = document.getElementById("sleep-time").value.trim();
+ const wakeTime = document.getElementById("wake-time").value.trim();
+ const abnormal = document.getElementById("sleep-abnormal").value;
+ const timeRe = /^(1[0-2]|0?[1-9]):([0-5][0-9])\s*(AM|PM)$/i;
+ if (!timeRe.test(sleepTime)) {
+  alert("Please enter a valid sleep time (e.g., 11:30 PM).");
+  return false;
+ }
+ if (!timeRe.test(wakeTime)) {
+  alert("Please enter a valid wake time (e.g., 7:00 AM).");
+  return false;
+ }
+ if (!abnormal) {
+  alert("Please select whether your sleep schedule was abnormal.");
+  return false;
+ }
+ sleepData = { sleepTime, wakeTime, abnormal };
+ return true;
+}
+ 
 function startStroop(type) {
  currentStroopType = type;
  stroopTimeLeft = 45;
  currentStroopCorrectColor = "";
-
+ 
  stroopWordEl.textContent = "READY";
  stroopWordEl.style.color = "black";
  stroopScoreDisplayEl.textContent =
  "Correct: " + (type === "congruent" ? stroopCongruentScore : stroopIncongruentScore);
  stroopTimerEl.textContent = "Time left: 45s";
-
+ 
  hideAllSections();
  stroopSection.classList.add("active");
-
+ 
  if (stroopTimerId) clearInterval(stroopTimerId);
  stroopTimerId = setInterval(() => {
  stroopTimeLeft--;
@@ -503,10 +558,10 @@ function startStroop(type) {
  handleStroopEnd();
  }
  }, 1000);
-
+ 
  runStroopTrial();
 }
-
+ 
 function runStroopTrial() {
  const word = STROOP_COLORS[Math.floor(Math.random() * STROOP_COLORS.length)];
  let inkColor;
@@ -520,7 +575,7 @@ function runStroopTrial() {
  stroopWordEl.style.color = inkColor;
  currentStroopCorrectColor = inkColor;
 }
-
+ 
 function handleStroopEnd() {
  if (currentStroopType === "congruent") {
  hideAllSections();
@@ -531,9 +586,9 @@ function handleStroopEnd() {
  document.getElementById("test-complete").classList.add("active");
  }
 }
-
+ 
 // ======== Reaction Time Phase ========
-
+ 
 function startRT() {
  hideAllSections();
  rtSection.classList.add("active");
@@ -542,7 +597,7 @@ function startRT() {
  rtResultsEl.textContent = "";
  nextRTTrial();
 }
-
+ 
 function nextRTTrial() {
  rtBall.style.display = "none";
  const counter = document.getElementById("rt-trial-counter");
@@ -550,17 +605,17 @@ function nextRTTrial() {
  const preDelay = 3000 + Math.random() * 500;
  setTimeout(showRTBall, preDelay);
 }
-
+ 
 function showRTBall() {
  rtBall.style.left = "50%";
  rtBall.style.top = "50%";
  rtBall.style.transform = "translate(-50%, -50%)";
  rtBall.style.display = "block";
  rtStartTime = performance.now();
-
+ 
  if (rtHideTimer) clearTimeout(rtHideTimer);
  const hideDelay = 3000 + Math.random() * 500;
-
+ 
  rtHideTimer = setTimeout(() => {
  if (rtBall.style.display === "block") {
  rtBall.style.display = "none";
@@ -573,30 +628,29 @@ function showRTBall() {
  }
  }, hideDelay);
 }
-
+ 
 function finishRT() {
- // Fix 9: Guard against zero valid trials
  if (rtResults.length === 0) {
- rtBest = -1;
+  rtBest = 0;
+  rtResultsEl.innerHTML = `Average RT: N/A (no responses recorded)`;
  } else {
- let sum = rtResults.reduce((a, b) => a + b, 0);
- rtBest = Math.round(sum / rtResults.length);
+  let sum = rtResults.reduce((a, b) => a + b, 0);
+  rtBest = Math.round(sum / rtResults.length);
+  rtResultsEl.innerHTML = `Average RT: ${rtBest} ms`;
  }
-
- rtResultsEl.innerHTML = `Average RT: ${rtBest} ms`;
  testsRemaining.rt = false;
-
+ 
  const rtSummaryEl = document.getElementById("score-rt");
  if (rtSummaryEl) {
- rtSummaryEl.textContent = rtBest + " ms";
+  rtSummaryEl.textContent = rtBest > 0 ? rtBest + " ms" : "N/A";
  }
-
+ 
  hideAllSections();
  document.getElementById("test-complete").classList.add("active");
 }
-
+ 
 // ======== Summary Phase ========
-
+ 
 function showSummary() {
  testsRemaining.memory = false;
  setPhase("summary");
@@ -606,13 +660,14 @@ function showSummary() {
  clampProgress(100);
  scoreStroopCongEl.textContent = stroopCongruentScore;
  scoreStroopIncongEl.textContent = stroopIncongruentScore;
-
+ 
  const participantId = document.getElementById("participant-id").value.trim();
  document.getElementById("score-rt").textContent = rtBest + " ms";
-
+ 
  finalResults = {
  participantId: participantId,
  weekNumber: weekNumber,
+ sleep: sleepData,
  memory: {
  round1: roundOneScore,
  round2: roundTwoScore,
@@ -625,16 +680,16 @@ function showSummary() {
  digitSpanSequencing: dssBest,
  reactionTime: rtBest
  };
-
+ 
  // Lock this participant+week so they can't re-enter
  const lockKey = `testlock_${participantId}_week_${weekNumber}`;
  localStorage.setItem(lockKey, "completed");
-
+ 
  submitToGoogleForms();
 }
-
+ 
 // ======== Bootstrapping / Event Listeners ========
-
+ 
 document.addEventListener("DOMContentLoaded", () => {
  // 1. Cache ALL DOM references FIRST
  studyTitleEl = document.getElementById("study-title");
@@ -676,16 +731,27 @@ document.addEventListener("DOMContentLoaded", () => {
  rtBall = document.getElementById("rt-ball");
  rtArea = document.getElementById("rt-area");
  rtResultsEl = document.getElementById("rt-results");
-
+ 
  // 2. NOW safe to manipulate visibility
  hideAllSections();
  setupSection.classList.add("active");
-
+ 
+ // ---- Sleep survey time inputs ----
+ setupTimeInput("sleep-time");
+ setupTimeInput("wake-time");
+ 
+ // ---- Sleep survey submit ----
+ document.getElementById("sleep-submit-btn").addEventListener("click", () => {
+  if (validateSleepSurvey()) {
+   showTestSelection();
+  }
+ });
+ 
  // ---- Start button ----
  startBtn.addEventListener("click", () => {
  const participantId = participantIdInput.value.trim();
  const val = parseInt(weekInput.value, 10);
-
+ 
  if (!/^\d+$/.test(participantId)) {
  alert("Participant ID must be numbers only");
  return;
@@ -694,10 +760,10 @@ document.addEventListener("DOMContentLoaded", () => {
  alert("Please enter a valid week number (1-3).");
  return;
  }
-
+ 
  const lockKey = `testlock_${participantId}_week_${val}`;
  const lockStatus = localStorage.getItem(lockKey);
-
+ 
  if (lockStatus === "completed") {
  alert("You have already completed all tests for this week. You cannot re-enter.");
  return;
@@ -709,19 +775,19 @@ document.addEventListener("DOMContentLoaded", () => {
  );
  if (!proceed) return;
  }
-
+ 
  localStorage.setItem(lockKey, "started");
  weekNumber = val;
  wordsetIndex = selectWordset(weekNumber);
  pairs = WORDSETS[wordsetIndex].map(([L, R]) => [L, R]);
- showTestSelection();
+ showSleepSurvey();
  });
-
+ 
  // ---- Stroop keyboard handler ----
  document.addEventListener("keydown", (e) => {
  if (!stroopSection.classList.contains("active")) return;
  if (!currentStroopCorrectColor) return;
-
+ 
  const key = e.key.toLowerCase();
  let chosen = "";
  if (key === "r") chosen = "red";
@@ -729,7 +795,7 @@ document.addEventListener("DOMContentLoaded", () => {
  if (key === "g") chosen = "green";
  if (key === "y") chosen = "yellow";
  if (!chosen) return;
-
+ 
  if (chosen === currentStroopCorrectColor) {
  if (currentStroopType === "congruent") stroopCongruentScore++;
  else stroopIncongruentScore++;
@@ -741,7 +807,7 @@ document.addEventListener("DOMContentLoaded", () => {
  }
  runStroopTrial();
  });
-
+ 
  // ---- Test hub buttons (using .onclick = to prevent duplicate listeners) ----
   document.querySelectorAll(".stroop-btn").forEach(btn => {
  btn.addEventListener("click", () => {
@@ -773,12 +839,12 @@ document.addEventListener("DOMContentLoaded", () => {
  if (rtTrial < RT_TRIALS) nextRTTrial();
  else finishRT();
  });
-
+ 
  // ---- Instructions "Begin Test" button ----
  document.getElementById("instructions-start-btn").onclick = () => {
  if (pendingTestStart) pendingTestStart();
  };
-
+ 
  // ---- Digit span submit ----
  digitSubmitBtn.addEventListener("click", submitDigitSpan);
  if (digitInputEl) {
@@ -786,13 +852,13 @@ document.addEventListener("DOMContentLoaded", () => {
  if (e.key === "Enter") submitDigitSpan();
  });
  }
-
+ 
  // ---- Stroop pause → incongruent ----
  document.getElementById("stroop-continue").addEventListener("click", () => {
  document.getElementById("stroop-pause").classList.remove("active");
  startStroop("incongruent");
  });
-
+ 
  // ---- RT Space key handler (Fix 10: with active check) ----
  document.addEventListener("keydown", (e) => {
  if (e.code === "Space" && !e.repeat) {
@@ -812,7 +878,7 @@ document.addEventListener("DOMContentLoaded", () => {
  }
  }
  });
-
+ 
  // ---- "Back to Test Hub" from test-complete overlay ----
  document.getElementById("complete-continue").addEventListener("click", () => {
  document.getElementById("test-complete").classList.remove("active");
